@@ -1,0 +1,22 @@
+{
+  "name": "icosst-2026-platform",
+  "version": "1.0.0",
+  "description": "ICOSST 2026 Registration, Fees, Payment & Confirmation Platform (MERN)",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "seed": "npm --prefix server run seed",
+    "test:server": "npm --prefix server run test",
+    "test:client": "npm --prefix client run test",
+    "build": "npm --prefix client run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
