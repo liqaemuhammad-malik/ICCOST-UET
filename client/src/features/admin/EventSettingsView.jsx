@@ -38,7 +38,7 @@ export function EventSettingsView() {
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         {[
-          ['title', 'Event title'], ['subtitle', 'Subtitle'], ['dates', 'Event dates'],
+          ['title', 'Event title'], ['subtitle', 'Subtitle'], ['dates', 'Event dates'], ['registrationDeadline', 'Registration deadline'],
           ['venue', 'Venue'], ['address', 'Venue address'], ['email', 'Contact email'], ['phone', 'Contact phone'],
         ].map(([key, label]) => (
           <div key={key} className="space-y-1.5">

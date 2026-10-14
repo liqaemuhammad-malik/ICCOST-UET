@@ -10,6 +10,7 @@ export const DEFAULT_EVENT_DETAILS = {
   description: 'Join researchers, professionals, students, and technology leaders for two days of ideas, innovation, and collaboration.',
   email: 'icosst@kics.edu.pk',
   phone: '+92 (42) 99029450',
+  registrationDeadline: '2026-12-15T23:59:59+05:00',
 };
 
 export function EventDetailsBanner({ details = DEFAULT_EVENT_DETAILS }) {

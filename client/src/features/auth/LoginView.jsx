@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Lock, Mail, AlertCircle, ArrowRight, ShieldCheck } from 'lucide-react';
+import { RegistrationCountdown } from '@/features/public/RegistrationCountdown';
 
 const loginSchema = z.object({
   accountType: z.enum([
@@ -78,6 +79,8 @@ export function LoginView({ adminOnly = false }) {
             {adminOnly ? 'Secure access for the ICOSST administration portal' : 'Log in to access your category-specific dashboard and event schedule'}
           </p>
         </div>
+
+        {!adminOnly && <RegistrationCountdown />}
 
         <Card className="shadow-2xl border-white/70 dark:border-slate-800/80 backdrop-blur-sm bg-white/95 dark:bg-slate-900/95 transition-transform duration-300 hover:-translate-y-1">
           <CardHeader className="pb-4">
