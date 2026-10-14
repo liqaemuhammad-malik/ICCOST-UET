@@ -9,65 +9,25 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Lock, Mail, AlertCircle, ArrowRight, Sparkles, ShieldCheck } from 'lucide-react';
+import { Lock, Mail, AlertCircle, ArrowRight, ShieldCheck } from 'lucide-react';
 
 const loginSchema = z.object({
+  accountType: z.enum([
+    'ATTENDEE',
+    'PARTICIPANT',
+    'ORGANIZER',
+    'WORKSHOP_PRESENTER',
+    'MEDIA_PERSON',
+    'INVITED_SPEAKER',
+    'PRESENTER_CO_PRESENTER',
+    'PAPER_PRESENTER',
+    'ADMIN',
+  ]),
   email: z.string().email('Please enter a valid academic/personal email'),
   password: z.string().min(1, 'Password is required'),
 });
 
-const QUICK_TEST_ACCOUNTS = [
-  {
-    roleName: 'Attendee / Participant',
-    email: 'attendee@example.com',
-    pass: 'Participant@2026',
-    badge: 'ATTENDEE',
-  },
-  {
-    roleName: 'Organizer',
-    email: 'organizer@icosst.kics.edu.pk',
-    pass: 'Staff@icosst2026',
-    badge: 'ORGANIZER',
-  },
-  {
-    roleName: 'Workshop Presenter',
-    email: 'workshop@icosst.kics.edu.pk',
-    pass: 'Presenter@2026',
-    badge: 'WORKSHOP',
-  },
-  {
-    roleName: 'Media Person',
-    email: 'media@icosst.kics.edu.pk',
-    pass: 'Media@2026',
-    badge: 'MEDIA',
-  },
-  {
-    roleName: 'Invited Speaker',
-    email: 'speaker@icosst.kics.edu.pk',
-    pass: 'Speaker@2026',
-    badge: 'SPEAKER',
-  },
-  {
-    roleName: 'Presenter & Co-Presenter',
-    email: 'presenter@icosst.kics.edu.pk',
-    pass: 'Presenter@2026',
-    badge: 'CO-PRESENTER',
-  },
-  {
-    roleName: 'Paper Presenter',
-    email: 'paper@icosst.kics.edu.pk',
-    pass: 'Paper@2026',
-    badge: 'PAPER',
-  },
-  {
-    roleName: 'Conference Admin',
-    email: 'admin@icosst.kics.edu.pk',
-    pass: 'Admin@icosst2026',
-    badge: 'SUPER ADMIN',
-  },
-];
-
-export function LoginView() {
+export function LoginView({ adminOnly = false }) {
   const { login } = useAuthStore();
   const navigate = useNavigate();
   const [serverError, setServerError] = useState('');
@@ -76,11 +36,11 @@ export function LoginView() {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
+      accountType: adminOnly ? 'ADMIN' : 'ATTENDEE',
       email: '',
       password: '',
     },
@@ -104,48 +64,39 @@ export function LoginView() {
     }
   };
 
-  const handleQuickLogin = (email, pass) => {
-    setValue('email', email);
-    setValue('password', pass);
-    setServerError('');
-  };
-
   return (
-    <div className="py-10 px-4 flex flex-col items-center justify-center min-h-[calc(100vh-140px)] bg-slate-50 dark:bg-slate-950">
-      <div className="w-full max-w-xl">
+    <div className="relative flex min-h-[calc(100vh-140px)] flex-col items-center justify-center overflow-hidden px-4 py-10" style={{ backgroundImage: "url('/uet_lahore_cover.jpeg')", backgroundPosition: 'center', backgroundSize: 'cover' }}>
+      <img src="/uet_lahore_cover.jpeg" alt="" aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full scale-110 object-cover" />
+      <div className="relative z-10 w-full max-w-xl animate-[fadeIn_.6s_ease-out]">
         {/* Conference Header Branding */}
         <div className="text-center mb-6">
-          <div className="inline-block bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200/90 mb-3">
-            <img
-              src="/icosst-logo.png"
-              alt="20th IEEE ICOSST 2026"
-              className="h-16 sm:h-20 w-auto object-contain mx-auto"
-            />
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold font-heading text-slate-900 dark:text-white">
-            Conference Sign In
+
+          <h1 className="text-2xl font-extrabold font-heading text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.85)] sm:text-3xl">
+            {adminOnly ? 'Administration Sign In' : 'Conference Sign In'}
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-md mx-auto">
-            Log in to access your category-specific dashboard and event schedule
+          <p className="mx-auto mt-1 max-w-md text-xs font-semibold text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] sm:text-sm">
+            {adminOnly ? 'Secure access for the ICOSST administration portal' : 'Log in to access your category-specific dashboard and event schedule'}
           </p>
         </div>
 
-        <Card className="shadow-lg border-slate-200 dark:border-slate-800">
+        <Card className="shadow-2xl border-white/70 dark:border-slate-800/80 backdrop-blur-sm bg-white/95 dark:bg-slate-900/95 transition-transform duration-300 hover:-translate-y-1">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-xl font-bold font-heading">
-                  Sign In to Dashboard
+                  {adminOnly ? 'Sign In to Admin Portal' : 'Sign In to Dashboard'}
                 </CardTitle>
                 <CardDescription className="text-xs">
                   Enter your registered email and password
                 </CardDescription>
               </div>
-              <Link to="/register">
-                <Button variant="outline" size="sm" className="text-xs">
-                  New? Register Here
-                </Button>
-              </Link>
+              {!adminOnly && (
+                <Link to="/register">
+                  <Button variant="outline" size="sm" className="text-xs">
+                    New? Register Here
+                  </Button>
+                </Link>
+              )}
             </div>
           </CardHeader>
 
@@ -158,6 +109,33 @@ export function LoginView() {
             )}
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="accountType" className="text-xs font-semibold">
+                  Login As
+                </Label>
+                <select
+                  id="accountType"
+                  className="w-full h-11 rounded-md border border-slate-300 bg-white px-3 text-sm dark:bg-slate-900 dark:border-slate-700"
+                  {...register('accountType')}
+                >
+                  {adminOnly ? (
+                    <option value="ADMIN">Conference Admin</option>
+                  ) : (
+                    <>
+                      <option value="ATTENDEE">Attendee</option>
+                      <option value="PARTICIPANT">Participant / UET Student</option>
+                      <option value="ORGANIZER">Organizer</option>
+                      <option value="WORKSHOP_PRESENTER">Workshop Presenter</option>
+                      <option value="MEDIA_PERSON">Media Person</option>
+                      <option value="INVITED_SPEAKER">Invited Speaker</option>
+                      <option value="PRESENTER_CO_PRESENTER">Presenter &amp; Co-Presenter</option>
+                      <option value="PAPER_PRESENTER">Paper Presenter</option>
+                    </>
+                  )}
+                </select>
+                {errors.accountType && <p className="text-xs text-rose-600">{errors.accountType.message}</p>}
+              </div>
+
               <div className="space-y-1.5">
                 <Label htmlFor="email" className="text-xs font-semibold">
                   Email Address
@@ -207,40 +185,16 @@ export function LoginView() {
               </Button>
             </form>
 
-            {/* Quick 1-Click Fill for All 7 Categories + Admin */}
-            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400 text-xs font-bold">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Instant 1-Click Test Accounts:</span>
-                </div>
-                <span className="text-[10px] text-slate-400">Click to autofill</span>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-                {QUICK_TEST_ACCOUNTS.map((acc, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => handleQuickLogin(acc.email, acc.pass)}
-                    className="text-left p-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-emerald-600 dark:hover:border-emerald-500 hover:bg-emerald-50/50 dark:hover:bg-slate-800 transition-all text-[11px]"
-                  >
-                    <span className="font-bold block truncate text-slate-900 dark:text-white">
-                      {acc.roleName}
-                    </span>
-                    <span className="text-[10px] text-slate-500 block truncate">{acc.email}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
           </CardContent>
 
-          <CardFooter className="justify-center border-t border-slate-100 dark:border-slate-800 py-3 text-xs text-slate-500">
-            Don't have an account?{' '}
-            <Link to="/register" className="text-emerald-700 dark:text-emerald-400 font-bold ml-1 hover:underline">
-              Register yourself here &rarr;
-            </Link>
-          </CardFooter>
+          {!adminOnly && (
+            <CardFooter className="justify-center border-t border-slate-100 py-3 text-xs text-slate-500 dark:border-slate-800">
+              Don't have an account?{' '}
+              <Link to="/register" className="ml-1 font-bold text-emerald-700 hover:underline dark:text-emerald-400">
+                Register yourself here &rarr;
+              </Link>
+            </CardFooter>
+          )}
         </Card>
       </div>
     </div>

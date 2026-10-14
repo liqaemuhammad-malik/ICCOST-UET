@@ -11,7 +11,40 @@ export function ScannerView() {
   const [scanResult, setScanResult] = useState(null); // { status: 'OK'|'ALREADY_REDEEMED'|'INELIGIBLE', name: '', details: '' }
 
   const handleSimulateScan = (code) => {
-    // Phase 1 preview demonstration of scan logic
+    let cardPayload = null;
+    try {
+      const parsed = JSON.parse(code);
+      if (parsed.cardId) cardPayload = parsed;
+    } catch {
+      try {
+        const parsedUrl = new URL(code);
+        if (parsedUrl.pathname.endsWith('/verify-card')) {
+          cardPayload = {
+            cardId: parsedUrl.searchParams.get('cardId'),
+            name: parsedUrl.searchParams.get('name'),
+            category: parsedUrl.searchParams.get('category'),
+          };
+        }
+      } catch {
+        // Plain pass tokens continue to use the demo response below.
+      }
+    }
+
+    if (cardPayload) {
+      setScanResult({
+        status: 'OK',
+        title: 'VERIFIED CARD',
+        attendee: cardPayload.name || 'Card Holder',
+        category: cardPayload.category || 'ATTENDEE_PARTICIPANT',
+        identityId: cardPayload.cardId,
+        station: `${scanMode} SCAN STATION 1`,
+        time: new Date().toLocaleTimeString(),
+        badgeVariant: 'success',
+      });
+      return;
+    }
+
+    // Plain pass-token preview demonstration
     if (code.toUpperCase().includes('GATE') || code.length > 5) {
       setScanResult({
         status: 'OK',
@@ -115,10 +148,46 @@ export function ScannerView() {
           )}
 
           <h2 className="text-2xl font-black tracking-wide font-heading uppercase">{scanResult.title}</h2>
-          <p className="text-base font-bold mt-1 text-white/95">{scanResult.attendee}</p>
+          {scanResult.status === 'OK' ? (
+            <div className="mt-4 overflow-hidden rounded-xl bg-white text-left text-slate-900 shadow-xl">
+              <div className="border-b-2 border-amber-400 bg-white px-4 py-2">
+                <div className="flex items-center justify-between gap-2">
+                  <img src="/uet-logo.png" alt="UET Lahore" className="h-10 w-10 object-contain" />
+                  <img src="/icosst-logo.png" alt="ICOSST 2026" className="h-10 flex-1 object-contain" />
+                  <img src="/kics-logo.png" alt="KICS UET Lahore" className="h-10 w-10 object-contain" />
+                </div>
+              </div>
+              <div className="bg-emerald-950 px-4 py-3 text-white">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-emerald-200">Verified Holding Card</p>
+                    <p className="mt-1 text-lg font-extrabold">{scanResult.attendee}</p>
+                  </div>
+                  <Badge className="shrink-0 gap-1 bg-emerald-500 text-white border-emerald-300">
+                    <CheckCircle2 className="h-3 w-3" /> VERIFIED
+                  </Badge>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3 px-4 py-3 text-xs">
+                <div>
+                  <p className="text-[9px] font-bold uppercase text-slate-400">Identification</p>
+                  <p className="break-all font-mono font-bold text-emerald-900">{scanResult.identityId || 'VALID PASS'}</p>
+                </div>
+                <div>
+                  <p className="text-[9px] font-bold uppercase text-slate-400">Category</p>
+                  <p className="font-semibold capitalize">{scanResult.category.replaceAll('_', ' ').toLowerCase()}</p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <>
+              <p className="text-base font-bold mt-1 text-white/95">{scanResult.attendee}</p>
           <div className="mt-2 inline-block bg-black/30 px-3 py-1 rounded-full text-xs font-semibold">
             {scanResult.category} • {scanResult.station}
           </div>
+
+            </>
+          )}
 
           {scanResult.details && (
             <p className="text-xs mt-3 bg-black/40 p-2 rounded-lg text-white font-medium">

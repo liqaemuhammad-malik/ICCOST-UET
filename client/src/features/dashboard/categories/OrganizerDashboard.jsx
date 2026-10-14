@@ -1,17 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
-  ShieldCheck,
-  Users,
-  Calendar,
   Layers,
   Activity,
-  QrCode,
-  ArrowRight,
-  ExternalLink,
 } from 'lucide-react';
 
 export function OrganizerDashboard({ user }) {
@@ -38,18 +30,6 @@ export function OrganizerDashboard({ user }) {
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-2">
-              <Link to="/admin">
-                <Button size="sm" className="bg-emerald-600 hover:bg-emerald-500 text-white gap-1.5 shadow">
-                  <ExternalLink className="w-4 h-4" /> Full Admin Control Hub
-                </Button>
-              </Link>
-              <Link to="/scan">
-                <Button size="sm" variant="outline" className="border-slate-600 text-slate-200 hover:bg-slate-800 gap-1.5">
-                  <QrCode className="w-4 h-4 text-emerald-400" /> Scanner PWA
-                </Button>
-              </Link>
-            </div>
           </div>
         </CardContent>
       </Card>

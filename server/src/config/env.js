@@ -1,8 +1,14 @@
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { z } from 'zod';
 import { logger } from '../utils/logger.js';
 
-dotenv.config();
+// The server is commonly started through `npm --prefix server`, which changes
+// the working directory. Resolve the shared .env from the repository root so
+// both root and server commands load the same database configuration.
+const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
+dotenv.config({ path: path.join(projectRoot, '.env') });
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
@@ -10,6 +16,13 @@ const envSchema = z.object({
   CLIENT_URL: z.string().default('http://localhost:5173'),
 
   MONGODB_URI: z.string().default('mongodb://127.0.0.1:27017/icosst2026'),
+
+  // UET LMS (Odoo) student authentication
+  LMS_API_URL: z.string().url().default('https://lms.uet.edu.pk'),
+  LMS_DB_NAME: z.string().default('OBE'),
+  LMS_API_ENDPOINT: z.string().default('/web/session/authenticate'),
+  LMS_PROFILE_MODEL: z.string().default('res.users'),
+  LMS_TIMEOUT_SECONDS: z.coerce.number().positive().default(10),
 
   REDIS_URL: z.string().default('redis://127.0.0.1:6379'),
   USE_IN_MEMORY_QUEUE: z.coerce.boolean().default(true),

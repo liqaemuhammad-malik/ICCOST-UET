@@ -39,7 +39,7 @@ export function AdminLayout() {
   const adminNav = [
     { label: 'Executive KPIs', path: '/admin', icon: BarChart3 },
     { label: 'Categories & Fields', path: '/admin/categories', icon: Layers },
-    { label: 'Activities & Capacity', path: '/admin/activities', icon: ClipboardList },
+    { label: 'Events & Venues', path: '/admin/activities', icon: ClipboardList },
     { label: 'Pricing & Promos (SAMPLE)', path: '/admin/pricing', icon: CreditCard },
     { label: 'Finance & Bank Queue', path: '/admin/finance', icon: CreditCard },
     { label: 'Review Approvals', path: '/admin/approvals', icon: FileCheck },

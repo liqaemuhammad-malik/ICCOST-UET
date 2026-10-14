@@ -1,6 +1,7 @@
 import * as authService from './auth.service.js';
 import * as userService from '../users/user.service.js';
 import { env } from '../../config/env.js';
+import { AppError } from '../../utils/appError.js';
 
 const REFRESH_COOKIE_NAME = 'refreshToken';
 
@@ -53,8 +54,8 @@ export async function verifyEmail(req, res, next) {
 
 export async function login(req, res, next) {
   try {
-    const { email, password } = req.body;
-    const { accessToken, refreshToken, user } = await authService.login(email, password, req);
+    const { email, password, accountType } = req.body;
+    const { accessToken, refreshToken, user } = await authService.login(email, password, accountType, req);
 
     setRefreshCookie(res, refreshToken);
 
@@ -146,6 +147,26 @@ export async function updateProfile(req, res, next) {
       success: true,
       data: updatedProfile,
       message: 'Profile updated successfully',
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function uploadProfilePhoto(req, res, next) {
+  try {
+    if (!req.file) {
+      return next(AppError.badRequest('Profile photo is required', 'PROFILE_PHOTO_REQUIRED'));
+    }
+
+    const profileImageUrl = `/uploads/${req.file.filename}`;
+    await userService.updateProfilePhoto(req.user._id, profileImageUrl);
+    const fullUser = await userService.getUserWithProfile(req.user._id);
+
+    res.json({
+      success: true,
+      data: fullUser,
+      message: 'Profile photo uploaded successfully',
     });
   } catch (err) {
     next(err);

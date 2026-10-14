@@ -33,6 +33,11 @@ const profileSchema = new mongoose.Schema(
       default: '',
       index: true,
     },
+    profileImageUrl: {
+      type: String,
+      trim: true,
+      default: '',
+    },
     studentOrEmployeeId: {
       type: String,
       trim: true,

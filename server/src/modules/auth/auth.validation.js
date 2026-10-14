@@ -12,6 +12,17 @@ export const registerSchema = {
 
 export const loginSchema = {
   body: z.object({
+    accountType: z.enum([
+      'ATTENDEE',
+      'PARTICIPANT',
+      'ORGANIZER',
+      'WORKSHOP_PRESENTER',
+      'MEDIA_PERSON',
+      'INVITED_SPEAKER',
+      'PRESENTER_CO_PRESENTER',
+      'PAPER_PRESENTER',
+      'ADMIN',
+    ]).default('ATTENDEE'),
     email: z.string().email('Please enter a valid email address'),
     password: z.string().min(1, 'Password is required'),
   }),

@@ -188,6 +188,29 @@ export async function runSeed() {
   logger.info('Seeding configurable System Settings...');
   const settingsData = [
     {
+      key: 'EVENT_DETAILS',
+      value: {
+        title: '20th IEEE ICOSST 2026',
+        subtitle: 'International Conference on Open Source Systems & Technologies',
+        dates: '22–23 December 2026',
+        venue: 'KICS Seminar Complex, UET Lahore',
+        address: 'GT Road, Lahore, Pakistan',
+        description: 'Join researchers, professionals, students, and technology leaders for two days of ideas, innovation, and collaboration.',
+        email: 'icosst@kics.edu.pk',
+        phone: '+92 (42) 99029450',
+      },
+      description: 'Public event details displayed across login and registration pages.',
+    },
+    {
+      key: 'EVENT_SCHEDULE',
+      value: [
+        { day: 'Day 1', date: '22 December 2026', time: '09:00–10:00', title: 'Opening Ceremony & Keynote', venue: 'KICS Main Auditorium', speaker: 'ICOSST Steering Committee', description: '' },
+        { day: 'Day 1', date: '22 December 2026', time: '10:30–12:00', title: 'Technical Track Sessions', venue: 'Session Hall A', speaker: '', description: '' },
+        { day: 'Day 2', date: '23 December 2026', time: '09:30–11:00', title: 'Research Presentations', venue: 'Session Hall B', speaker: '', description: '' },
+      ],
+      description: 'Published conference events, sessions, speakers, and venues.',
+    },
+    {
       key: 'HOLD_EXPIRY_MINUTES',
       value: 15,
       description: 'Minutes before an unpaid seat hold automatically expires and is released or offered to waitlist',

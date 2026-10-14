@@ -11,9 +11,14 @@ import { RegisterView } from '@/features/auth/RegisterView';
 import { VerifyEmailView } from '@/features/auth/VerifyEmailView';
 import { ForgotPasswordView } from '@/features/auth/ForgotPasswordView';
 import { ResetPasswordView } from '@/features/auth/ResetPasswordView';
+import { VerifyCardView } from '@/features/public/VerifyCardView';
 import { DashboardOverviewView } from '@/features/dashboard/DashboardOverviewView';
+import { DigitalPassView } from '@/features/dashboard/DigitalPassView';
 import { AdminDashboard } from '@/admin/AdminDashboard';
 import { ScannerView } from '@/scanner/ScannerView';
+import { EventSettingsView } from '@/features/admin/EventSettingsView';
+import { EventScheduleView } from '@/features/admin/EventScheduleView';
+import { PublicScheduleView } from '@/features/public/PublicScheduleView';
 
 export const router = createBrowserRouter([
   {
@@ -23,9 +28,11 @@ export const router = createBrowserRouter([
       { index: true, element: <RegisterView /> },
       { path: 'register', element: <RegisterView /> },
       { path: 'login', element: <LoginView /> },
+      { path: 'admin-login', element: <LoginView adminOnly /> },
       { path: 'verify-email', element: <VerifyEmailView /> },
       { path: 'forgot-password', element: <ForgotPasswordView /> },
       { path: 'reset-password', element: <ResetPasswordView /> },
+      { path: 'verify-card', element: <VerifyCardView /> },
       {
         path: 'catalog',
         element: (
@@ -41,7 +48,8 @@ export const router = createBrowserRouter([
       },
       {
         path: 'schedule',
-        element: (
+        element: <PublicScheduleView />,
+        /* element: (
           <div className="container mx-auto px-4 py-12">
             <h1 className="text-3xl font-bold font-heading mb-2">22–23 December 2026 Event Schedule</h1>
             <p className="text-sm text-slate-500 mb-6">Timetable and room assignments at KICS Seminar Complex, UET Lahore.</p>
@@ -50,7 +58,7 @@ export const router = createBrowserRouter([
               <p className="text-xs text-slate-500">Delivered in Phase 2 with full room and session allocations.</p>
             </div>
           </div>
-        ),
+        ), */
       },
       {
         path: 'tracks',
@@ -70,15 +78,7 @@ export const router = createBrowserRouter([
       { index: true, element: <DashboardOverviewView /> },
       {
         path: 'pass',
-        element: (
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
-            <h3 className="text-lg font-bold font-heading mb-1">Digital QR Pass</h3>
-            <p className="text-xs text-slate-500 mb-4">Digital badge with cryptographically signed token for gate, session & refreshment check-ins.</p>
-            <div className="p-6 border border-dashed rounded-lg text-center bg-slate-50 dark:bg-slate-900 text-xs text-slate-500">
-              Passes are cryptographically issued upon registration confirmation (Phase 7 & 8).
-            </div>
-          </div>
-        ),
+        element: <DigitalPassView />,
       },
       {
         path: 'timetable',
@@ -129,12 +129,13 @@ export const router = createBrowserRouter([
       },
       {
         path: 'activities',
-        element: (
+        element: <EventScheduleView />,
+        /* element: (
           <div className="space-y-4">
             <h2 className="text-xl font-bold font-heading">Activities, Sessions & Rooms</h2>
             <p className="text-xs text-slate-500">Manage workshop seat capacities, physical rooms, and schedules.</p>
           </div>
-        ),
+        ), */
       },
       {
         path: 'pricing',
@@ -178,12 +179,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'settings',
-        element: (
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold font-heading">System Parameters & Settings</h2>
-            <p className="text-xs text-slate-500">Seat hold TTL, waitlist toggles, tax rates, and session buffer tolerances.</p>
-          </div>
-        ),
+        element: <EventSettingsView />,
       },
     ],
   },

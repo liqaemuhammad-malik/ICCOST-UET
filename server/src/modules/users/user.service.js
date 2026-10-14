@@ -108,3 +108,12 @@ export async function updateProfile(userId, profileData, actor = null) {
 
   return profile;
 }
+
+export async function updateProfilePhoto(userId, profileImageUrl) {
+  const profile = await Profile.findOneAndUpdate(
+    { userId },
+    { $set: { profileImageUrl } },
+    { new: true, upsert: true }
+  );
+  return profile;
+}

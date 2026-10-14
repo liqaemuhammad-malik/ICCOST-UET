@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, Link, useLocation, Navigate } from 'react-router-dom';
+import { Outlet, Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/useAuthStore';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -11,11 +11,13 @@ import {
   Settings,
   AlertCircle,
   CheckCircle2,
+  LogOut,
 } from 'lucide-react';
 
 export function DashboardLayout() {
-  const { user, isAuthenticated } = useAuthStore();
+  const { user, isAuthenticated, logout } = useAuthStore();
   const location = useLocation();
+  const navigate = useNavigate();
 
   if (!isAuthenticated || !user) {
     return <Navigate to="/login" replace state={{ from: location }} />;
@@ -23,7 +25,7 @@ export function DashboardLayout() {
 
   const sidebarLinks = [
     { label: 'Overview & Status', path: '/dashboard', icon: User },
-    { label: 'My Digital QR Pass', path: '/dashboard/pass', icon: QrCode },
+    { label: 'My Holding Card', path: '/dashboard/pass', icon: QrCode },
     { label: 'Personal Timetable', path: '/dashboard/timetable', icon: Calendar },
     { label: 'Orders & Receipts', path: '/dashboard/invoices', icon: CreditCard },
     { label: 'Team Competitions', path: '/dashboard/teams', icon: Users },
@@ -57,11 +59,23 @@ export function DashboardLayout() {
           </p>
         </div>
 
-        <div className="text-right flex flex-col items-end">
+        <div className="flex flex-col items-end gap-2">
+          <button
+            type="button"
+            onClick={async () => {
+              await logout();
+              navigate('/login');
+            }}
+            className="flex items-center gap-1.5 rounded-md border border-rose-200 px-3 py-1.5 text-xs font-bold text-rose-700 transition-colors hover:bg-rose-50"
+          >
+            <LogOut className="h-3.5 w-3.5" /> Logout
+          </button>
+          <div className="text-right flex flex-col items-end">
           <span className="text-xs text-slate-400 uppercase font-semibold">Registered Category</span>
           <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">
             {user.category || user.profile?.categoryCode || 'ATTENDEE_PARTICIPANT'}
           </span>
+          </div>
         </div>
       </div>
 

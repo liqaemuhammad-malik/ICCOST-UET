@@ -11,6 +11,8 @@ import { createUser, getUserWithProfile } from '../users/user.service.js';
 import { queueEmail } from '../../config/mailer.js';
 import { env } from '../../config/env.js';
 import { logAuditEvent } from '../audit/audit.service.js';
+import { authenticateStudent } from './lms.service.js';
+
 
 export async function register(data, req = null) {
   const { user, rawVerificationToken } = await createUser(data);
@@ -101,7 +103,7 @@ export async function verifyEmail(token, req = null) {
   return { message: 'Email verified successfully. You may now log in.' };
 }
 
-export async function login(email, password, req = null) {
+export async function login(email, password, accountType = 'ATTENDEE', req = null) {
   const user = await User.findOne({ email: email.toLowerCase() }).select('+passwordHash +refreshTokenHash');
 
   if (!user) {
@@ -113,7 +115,16 @@ export async function login(email, password, req = null) {
   }
 
   const isMatch = await user.comparePassword(password);
-  if (!isMatch) {
+
+  // Student accounts use the UET LMS as the credential authority. The local
+  // password hash remains useful for tests and for non-student accounts, but
+  // normal student logins always validate against the LMS.
+  if (accountType === 'PARTICIPANT' && env.NODE_ENV !== 'test') {
+    const lmsResult = await authenticateStudent(email.toLowerCase(), password);
+    if (!lmsResult.authenticated) {
+      throw AppError.unauthorized('Invalid UET LMS credentials', 'INVALID_CREDENTIALS');
+    }
+  } else if (!isMatch) {
     throw AppError.unauthorized('Invalid email or password', 'INVALID_CREDENTIALS');
   }
 

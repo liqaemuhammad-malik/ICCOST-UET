@@ -35,6 +35,15 @@ export async function updateProfileApi(profileData) {
   return res.data;
 }
 
+export async function uploadProfilePhotoApi(file) {
+  const formData = new FormData();
+  formData.append('profilePhoto', file);
+  const res = await api.post('/auth/profile-photo', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return res.data;
+}
+
 export async function forgotPasswordApi(email) {
   const res = await api.post('/auth/forgot-password', { email });
   return res.data;

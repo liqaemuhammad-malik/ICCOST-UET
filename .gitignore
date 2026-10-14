@@ -19,6 +19,9 @@ build/
 .vite/
 client/.vite/
 
+# Runtime user uploads
+server/uploads/
+
 # Logs
 logs
 *.log

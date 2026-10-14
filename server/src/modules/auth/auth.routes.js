@@ -3,6 +3,7 @@ import * as authController from './auth.controller.js';
 import { authenticate } from '../../middleware/auth.middleware.js';
 import { validate } from '../../middleware/validate.middleware.js';
 import { authLimiter } from '../../middleware/rateLimiter.middleware.js';
+import { upload } from '../../middleware/upload.middleware.js';
 import {
   registerSchema,
   loginSchema,
@@ -24,5 +25,6 @@ router.post('/reset-password', authLimiter, validate(resetPasswordSchema), authC
 
 router.get('/me', authenticate, authController.getMe);
 router.put('/profile', authenticate, validate(updateProfileSchema), authController.updateProfile);
+router.post('/profile-photo', authenticate, upload.single('profilePhoto'), authController.uploadProfilePhoto);
 
 export default router;

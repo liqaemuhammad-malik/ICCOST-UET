@@ -26,9 +26,15 @@ import {
 const CATEGORY_OPTIONS = [
   {
     value: 'ATTENDEE_PARTICIPANT',
-    label: 'Attendee / Participant',
-    description: 'General conference delegate, students, and faculty attending keynotes and tracks.',
+    label: 'Attendee',
+    description: 'General conference attendee joining keynotes, tracks, and exhibition activities.',
     color: '#0b4f35',
+  },
+  {
+    value: 'PARTICIPANT',
+    label: 'Participant / UET Student',
+    description: 'UET students and delegates whose credentials are checked through the UET LMS at login.',
+    color: '#047857',
   },
   {
     value: 'ORGANIZER',
@@ -111,7 +117,7 @@ export function RegisterView() {
         name: values.name,
         email: values.email,
         password: values.password,
-        category: values.category,
+        category: values.category === 'PARTICIPANT' ? 'ATTENDEE_PARTICIPANT' : values.category,
         institution: values.institution || '',
       });
 
@@ -141,26 +147,21 @@ export function RegisterView() {
   const selectedCategoryInfo = CATEGORY_OPTIONS.find((c) => c.value === selectedCategory);
 
   return (
-    <div className="py-10 px-4 flex flex-col items-center justify-center min-h-[calc(100vh-140px)] bg-slate-50 dark:bg-slate-950">
-      <div className="w-full max-w-xl">
+    <div className="relative flex min-h-[calc(100vh-140px)] flex-col items-center justify-center overflow-hidden bg-slate-950 px-4 py-10" style={{ backgroundImage: "url('/uet_lahore_cover.jpeg')", backgroundPosition: 'center', backgroundSize: 'cover' }}>
+      <img src="/uet_lahore_cover.jpeg" alt="" aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full scale-110 object-cover" />
+      <div className="relative z-10 w-full max-w-xl animate-[fadeIn_.6s_ease-out]">
         {/* Conference Header Branding */}
         <div className="text-center mb-6">
-          <div className="inline-block bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200/90 mb-3">
-            <img
-              src="/icosst-logo.png"
-              alt="20th IEEE ICOSST 2026"
-              className="h-16 sm:h-20 w-auto object-contain mx-auto"
-            />
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold font-heading text-slate-900 dark:text-white">
+
+          <h1 className="text-2xl font-extrabold font-heading text-white drop-shadow-[0_2px_5px_rgba(0,0,0,0.85)] sm:text-3xl">
             Conference Registration Portal
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-md mx-auto">
+          <p className="mx-auto mt-1 max-w-md text-xs font-semibold text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] sm:text-sm">
             Select your participation category to access your specific conference dashboard
           </p>
         </div>
 
-        <Card className="shadow-lg border-slate-200 dark:border-slate-800">
+        <Card className="shadow-2xl border-white/70 dark:border-slate-800/80 backdrop-blur-sm bg-white/95 dark:bg-slate-900/95 transition-transform duration-300 hover:-translate-y-1">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <div>

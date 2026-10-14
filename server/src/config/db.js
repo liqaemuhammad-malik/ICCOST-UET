@@ -19,6 +19,13 @@ export async function connectDB() {
     logger.info('Connected to MongoDB successfully');
     return mongoose.connection;
   } catch (err) {
+    // An Atlas SRV connection must be fixed/configured by the user; falling
+    // back to an ephemeral local database would hide the real DNS/auth error.
+    if (mongoUri.startsWith('mongodb+srv://')) {
+      logger.error({ error: err.message }, 'MongoDB Atlas connection failed');
+      throw err;
+    }
+
     logger.warn({ error: err.message }, 'Could not connect to configured MongoDB URI. Launching embedded MongoMemoryReplSet (zero-docker mode)...');
 
     try {

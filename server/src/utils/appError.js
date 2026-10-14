@@ -33,4 +33,8 @@ export class AppError extends Error {
   static unprocessable(message = 'Validation failed', errorCode = 'VALIDATION_ERROR', details = []) {
     return new AppError(message, 422, errorCode, details);
   }
+
+  static serviceUnavailable(message = 'Service temporarily unavailable', errorCode = 'SERVICE_UNAVAILABLE', details = []) {
+    return new AppError(message, 503, errorCode, details);
+  }
 }
