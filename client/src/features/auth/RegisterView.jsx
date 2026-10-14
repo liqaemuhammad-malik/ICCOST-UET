@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { RegistrationCountdown } from '@/features/public/RegistrationCountdown';
 import {
   User,
   Mail,
@@ -160,6 +161,8 @@ export function RegisterView() {
             Select your participation category to access your specific conference dashboard
           </p>
         </div>
+
+        <RegistrationCountdown />
 
         <Card className="shadow-2xl border-white/70 dark:border-slate-800/80 backdrop-blur-sm bg-white/95 dark:bg-slate-900/95 transition-transform duration-300 hover:-translate-y-1">
           <CardHeader className="pb-4">

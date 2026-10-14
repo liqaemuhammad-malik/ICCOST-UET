@@ -80,7 +80,7 @@ export function LoginView({ adminOnly = false }) {
           </p>
         </div>
 
-        {!adminOnly && <RegistrationCountdown />}
+        <RegistrationCountdown />
 
         <Card className="shadow-2xl border-white/70 dark:border-slate-800/80 backdrop-blur-sm bg-white/95 dark:bg-slate-900/95 transition-transform duration-300 hover:-translate-y-1">
           <CardHeader className="pb-4">
