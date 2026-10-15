@@ -14,6 +14,7 @@ import authRoutes from './modules/auth/auth.routes.js';
 import categoryRoutes from './modules/categories/category.routes.js';
 import settingRoutes from './modules/settings/setting.routes.js';
 import auditRoutes from './modules/audit/audit.routes.js';
+import registrationRoutes from './modules/registrations/registration.routes.js';
 
 export const app = express();
 
@@ -73,6 +74,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/settings', settingRoutes);
 app.use('/api/audit', auditRoutes);
+app.use('/api/registrations', registrationRoutes);
 
 // Catch-all for undefined routes
 app.use('*', (req, res, next) => {

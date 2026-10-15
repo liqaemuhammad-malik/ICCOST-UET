@@ -14,6 +14,11 @@ import { ResetPasswordView } from '@/features/auth/ResetPasswordView';
 import { VerifyCardView } from '@/features/public/VerifyCardView';
 import { DashboardOverviewView } from '@/features/dashboard/DashboardOverviewView';
 import { DigitalPassView } from '@/features/dashboard/DigitalPassView';
+import { ConferenceRegistrationView } from '@/features/dashboard/ConferenceRegistrationView';
+import { RegistrationStatusView } from '@/features/dashboard/RegistrationStatusView';
+import { PaymentSubmissionView } from '@/features/dashboard/PaymentSubmissionView';
+import { OrdersReceiptsView } from '@/features/dashboard/OrdersReceiptsView';
+import { AdminRegistrationsView } from '@/admin/AdminRegistrationsView';
 import { AdminDashboard } from '@/admin/AdminDashboard';
 import { ScannerView } from '@/scanner/ScannerView';
 import { EventSettingsView } from '@/features/admin/EventSettingsView';
@@ -79,6 +84,18 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <DashboardOverviewView /> },
       {
+        path: 'registration',
+        element: <ConferenceRegistrationView />,
+      },
+      {
+        path: 'status',
+        element: <RegistrationStatusView />,
+      },
+      {
+        path: 'payment',
+        element: <PaymentSubmissionView />,
+      },
+      {
         path: 'pass',
         element: <DigitalPassView />,
       },
@@ -92,12 +109,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'invoices',
-        element: (
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
-            <h3 className="text-lg font-bold font-heading mb-1">Order History & Invoices</h3>
-            <p className="text-xs text-slate-500">Download official PDF receipts and verify payment settlement status.</p>
-          </div>
-        ),
+        element: <OrdersReceiptsView />,
       },
       {
         path: 'teams',
@@ -120,48 +132,31 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <AdminDashboard /> },
       {
+        path: 'registrations',
+        element: <AdminRegistrationsView defaultFilter="ALL" />,
+      },
+      {
+        path: 'finance',
+        element: <AdminRegistrationsView defaultFilter="VERIFICATION" />,
+      },
+      {
+        path: 'approvals',
+        element: <AdminRegistrationsView defaultFilter="ALL" />,
+      },
+      {
+        path: 'pricing',
+        element: <AdminRegistrationsView defaultFilter="SETTINGS" />,
+      },
+      {
+        path: 'activities',
+        element: <EventScheduleView />,
+      },
+      {
         path: 'categories',
         element: (
           <div className="space-y-4">
             <h2 className="text-xl font-bold font-heading">Participant Categories & Dynamic Field Builder</h2>
             <p className="text-xs text-slate-500">Admin CRUD for category rules, required profile fields, and activity permissions.</p>
-          </div>
-        ),
-      },
-      {
-        path: 'activities',
-        element: <EventScheduleView />,
-        /* element: (
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold font-heading">Activities, Sessions & Rooms</h2>
-            <p className="text-xs text-slate-500">Manage workshop seat capacities, physical rooms, and schedules.</p>
-          </div>
-        ), */
-      },
-      {
-        path: 'pricing',
-        element: (
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold font-heading">Pricing Rules & Promo Codes (SAMPLE)</h2>
-            <p className="text-xs text-slate-500">Dimensional price matrix configuration, early bird discounts, and waivers.</p>
-          </div>
-        ),
-      },
-      {
-        path: 'finance',
-        element: (
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold font-heading">Finance & Bank Transfer Verification Queue</h2>
-            <p className="text-xs text-slate-500">Review deposit slips, duplicate reference detection, and refund processing.</p>
-          </div>
-        ),
-      },
-      {
-        path: 'approvals',
-        element: (
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold font-heading">Registration Approvals Queue</h2>
-            <p className="text-xs text-slate-500">Verify student identities, competition abstracts, and VIP invitations.</p>
           </div>
         ),
       },

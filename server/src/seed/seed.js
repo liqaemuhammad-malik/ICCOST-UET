@@ -243,8 +243,34 @@ export async function runSeed() {
     },
     {
       key: 'OFFICIAL_FEES_APPROVED',
-      value: false,
+      value: true,
       description: 'Flag indicating whether official ICOSST 2026 fee structure has been approved by the steering committee',
+    },
+    {
+      key: 'BANK_TRANSFER_DETAILS',
+      value: {
+        accountTitle: 'AL-KHAWARIZMI INSTITUTE OF COMPUTER SCIENCE UET LAHORE',
+        iban: 'PK93UNIL0109000316984445',
+        bankName: 'UNITED BANK LIMITED',
+        swiftCode: 'UNILPKKA',
+        branch: 'UBL UET BRANCH',
+        branchCode: '1950',
+        branchAddress: 'MAIN GT ROAD UET LAHORE',
+        instructions: 'Please transfer the exact payable amount to the official ICOSST account and upload the transaction receipt/screenshot for finance verification.',
+      },
+      description: 'Official bank transfer deposit credentials verified for ICOSST 2026.',
+    },
+    {
+      key: 'REGISTRATION_FEE_SETTINGS',
+      value: {
+        currency: 'PKR',
+        ieeeStudentPhysical: 1000,
+        ieeeStudentVirtual: 1000,
+        nonIeeeProfessionalPhysical: 2000,
+        nonIeeeProfessionalVirtual: 2000,
+        dinnerFee: 5000,
+      },
+      description: 'Official tier rates for IEEE Students, Professionals, and Gala Dinner.',
     },
   ];
 

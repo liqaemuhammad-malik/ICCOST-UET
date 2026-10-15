@@ -38,11 +38,12 @@ export function AdminLayout() {
 
   const adminNav = [
     { label: 'Executive KPIs', path: '/admin', icon: BarChart3 },
-    { label: 'Categories & Fields', path: '/admin/categories', icon: Layers },
+    { label: 'Participant Registrations', path: '/admin/registrations', icon: Users },
+    { label: 'Payment Verification Queue', path: '/admin/finance', icon: CreditCard },
+    { label: 'Registration Approvals', path: '/admin/approvals', icon: FileCheck },
+    { label: 'Registration Fee Settings', path: '/admin/pricing', icon: Layers },
     { label: 'Events & Venues', path: '/admin/activities', icon: ClipboardList },
-    { label: 'Pricing & Promos (SAMPLE)', path: '/admin/pricing', icon: CreditCard },
-    { label: 'Finance & Bank Queue', path: '/admin/finance', icon: CreditCard },
-    { label: 'Review Approvals', path: '/admin/approvals', icon: FileCheck },
+    { label: 'Categories & Fields', path: '/admin/categories', icon: Settings },
     { label: 'Meals & Attendance', path: '/admin/meals', icon: Coffee },
     { label: 'Staff & Audit Logs', path: '/admin/audit', icon: ShieldAlert },
     { label: 'System Settings', path: '/admin/settings', icon: Settings },

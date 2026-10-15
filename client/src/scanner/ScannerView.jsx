@@ -10,59 +10,61 @@ export function ScannerView() {
   const [manualCode, setManualCode] = useState('');
   const [scanResult, setScanResult] = useState(null); // { status: 'OK'|'ALREADY_REDEEMED'|'INELIGIBLE', name: '', details: '' }
 
-  const handleSimulateScan = (code) => {
-    let cardPayload = null;
+  const handleSimulateScan = async (code) => {
+    let targetId = code.trim();
     try {
       const parsed = JSON.parse(code);
-      if (parsed.cardId) cardPayload = parsed;
+      if (parsed.cardId) targetId = parsed.cardId;
+      else if (parsed.regNo) targetId = parsed.regNo;
     } catch {
       try {
         const parsedUrl = new URL(code);
-        if (parsedUrl.pathname.endsWith('/verify-card')) {
-          cardPayload = {
-            cardId: parsedUrl.searchParams.get('cardId'),
-            name: parsedUrl.searchParams.get('name'),
-            category: parsedUrl.searchParams.get('category'),
-          };
+        if (parsedUrl.searchParams.get('cardId')) {
+          targetId = parsedUrl.searchParams.get('cardId');
         }
-      } catch {
-        // Plain pass tokens continue to use the demo response below.
+      } catch {}
+    }
+
+    try {
+      const { verifyPassApi } = await import('@/api/registration');
+      const res = await verifyPassApi(targetId);
+      if (res?.data?.isValid && res?.data?.status === 'CONFIRMED') {
+        const d = res.data;
+        setScanResult({
+          status: 'OK',
+          title: 'VERIFIED & GRANTED',
+          attendee: d.attendee || 'Conference Delegate',
+          category: d.category || 'ATTENDEE_PARTICIPANT',
+          identityId: d.registrationNumber || targetId,
+          station: `${scanMode} SCAN STATION 1`,
+          time: new Date().toLocaleTimeString(),
+          details: d.dinnerIncluded
+            ? 'Access Confirmed: Day 1 & 2 Sessions + Gala Dinner Entitled'
+            : 'Access Confirmed: Day 1 & 2 Sessions + Networking Lunch Entitled',
+          badgeVariant: 'success',
+        });
+      } else {
+        const d = res?.data || {};
+        setScanResult({
+          status: 'INELIGIBLE',
+          title: 'ACCESS RESTRICTED',
+          attendee: d.attendee || 'Unverified Attendee',
+          category: d.category || 'NOT APPROVED',
+          identityId: targetId,
+          station: `${scanMode} SCAN STATION 1`,
+          time: new Date().toLocaleTimeString(),
+          details: d.message || 'Participant registration is pending payment verification or committee approval. Entry denied.',
+          badgeVariant: 'destructive',
+        });
       }
-    }
-
-    if (cardPayload) {
+    } catch {
       setScanResult({
-        status: 'OK',
-        title: 'VERIFIED CARD',
-        attendee: cardPayload.name || 'Card Holder',
-        category: cardPayload.category || 'ATTENDEE_PARTICIPANT',
-        identityId: cardPayload.cardId,
+        status: 'INELIGIBLE',
+        title: 'VERIFICATION ERROR',
+        attendee: 'Unknown Attendee',
+        category: 'UNVERIFIED',
         station: `${scanMode} SCAN STATION 1`,
-        time: new Date().toLocaleTimeString(),
-        badgeVariant: 'success',
-      });
-      return;
-    }
-
-    // Plain pass-token preview demonstration
-    if (code.toUpperCase().includes('GATE') || code.length > 5) {
-      setScanResult({
-        status: 'OK',
-        title: 'VERIFIED & GRANTED',
-        attendee: 'Prof. Muhammad Ali (UET Lahore)',
-        category: 'STUDENT_FACULTY',
-        station: `${scanMode} SCAN STATION 1`,
-        time: new Date().toLocaleTimeString(),
-        badgeVariant: 'success',
-      });
-    } else {
-      setScanResult({
-        status: 'ALREADY_REDEEMED',
-        title: 'DUPLICATE SCAN ALERT',
-        attendee: 'Sample Participant',
-        category: 'VISITOR_EXHIBITION',
-        station: `${scanMode} SCAN STATION 1`,
-        details: 'Pass token was already scanned at 11:42 AM today.',
+        details: 'Pass token or registration not found in authoritative database.',
         badgeVariant: 'destructive',
       });
     }
