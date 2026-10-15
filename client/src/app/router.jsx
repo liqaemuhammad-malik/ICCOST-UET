@@ -19,6 +19,8 @@ import { ScannerView } from '@/scanner/ScannerView';
 import { EventSettingsView } from '@/features/admin/EventSettingsView';
 import { EventScheduleView } from '@/features/admin/EventScheduleView';
 import { PublicScheduleView } from '@/features/public/PublicScheduleView';
+import { ConferenceTimetable } from '@/features/shared/ConferenceTimetable';
+import { RegisteredEventsView } from '@/features/dashboard/RegisteredEventsView';
 
 export const router = createBrowserRouter([
   {
@@ -82,12 +84,11 @@ export const router = createBrowserRouter([
       },
       {
         path: 'timetable',
-        element: (
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
-            <h3 className="text-lg font-bold font-heading mb-1">Personal Conference Timetable</h3>
-            <p className="text-xs text-slate-500">Customized schedule reflecting your confirmed keynotes and workshops.</p>
-          </div>
-        ),
+        element: <ConferenceTimetable title="Personal conference timetable" />,
+      },
+      {
+        path: 'registered-events',
+        element: <RegisteredEventsView />,
       },
       {
         path: 'invoices',

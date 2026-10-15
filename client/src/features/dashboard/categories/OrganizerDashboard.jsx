@@ -10,7 +10,7 @@ export function OrganizerDashboard({ user }) {
   return (
     <div className="space-y-6">
       {/* Category Hero Banner */}
-      <Card className="border-slate-800 bg-slate-900 text-white">
+      <Card className="hidden">
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>

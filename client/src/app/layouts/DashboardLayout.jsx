@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import {
   User,
   QrCode,
-  Calendar,
+  CalendarCheck2,
   CreditCard,
   Users,
   Settings,
@@ -13,6 +13,8 @@ import {
   CheckCircle2,
   LogOut,
 } from 'lucide-react';
+import { ConferenceTimetable } from '@/features/shared/ConferenceTimetable';
+import { defaultPortalTheme, portalThemes } from '@/features/dashboard/portalThemes';
 
 export function DashboardLayout() {
   const { user, isAuthenticated, logout } = useAuthStore();
@@ -23,26 +25,30 @@ export function DashboardLayout() {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
+  const category = user.category || user.profile?.categoryCode || 'ATTENDEE_PARTICIPANT';
+  const theme = portalThemes[category] || defaultPortalTheme;
+
   const sidebarLinks = [
     { label: 'Overview & Status', path: '/dashboard', icon: User },
     { label: 'My Holding Card', path: '/dashboard/pass', icon: QrCode },
-    { label: 'Personal Timetable', path: '/dashboard/timetable', icon: Calendar },
+    { label: 'Registered Events', path: '/dashboard/registered-events', icon: CalendarCheck2 },
     { label: 'Orders & Receipts', path: '/dashboard/invoices', icon: CreditCard },
     { label: 'Team Competitions', path: '/dashboard/teams', icon: Users },
     { label: 'Profile Settings', path: '/dashboard/profile', icon: Settings },
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className={`min-h-screen bg-gradient-to-b from-slate-50 to-white px-4 py-8 dark:from-slate-950 dark:to-slate-900 ${theme.accent}`}>
       {/* Top Banner with Participant Info */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className={`relative mb-6 flex flex-col items-start justify-between gap-4 overflow-hidden rounded-2xl border ${theme.border} bg-white p-6 shadow-sm dark:bg-slate-900 sm:flex-row sm:items-center`}>
+        <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${theme.shell}`} />
         <div>
           <div className="flex items-center gap-2 mb-1">
             <h1 className="text-2xl font-bold font-heading text-slate-900 dark:text-white">
               {user.name}
             </h1>
-            <Badge variant="uet" className="text-xs">
-              {user.role.toUpperCase()}
+            <Badge className={`text-xs ${theme.soft} ${theme.accent}`}>
+              {theme.label.toUpperCase()}
             </Badge>
             {user.isEmailVerified ? (
               <Badge variant="success" className="text-[10px] gap-1">
@@ -71,9 +77,9 @@ export function DashboardLayout() {
             <LogOut className="h-3.5 w-3.5" /> Logout
           </button>
           <div className="text-right flex flex-col items-end">
-          <span className="text-xs text-slate-400 uppercase font-semibold">Registered Category</span>
-          <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">
-            {user.category || user.profile?.categoryCode || 'ATTENDEE_PARTICIPANT'}
+            <span className={`text-xs uppercase font-semibold ${theme.accent}`}>{theme.eyebrow}</span>
+          <span className="text-sm font-bold text-slate-700 dark:text-slate-200">
+            {category.replaceAll('_', ' ')}
           </span>
           </div>
         </div>
@@ -81,8 +87,8 @@ export function DashboardLayout() {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar Nav */}
-        <div className="lg:col-span-1">
-          <nav className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-2 space-y-1 shadow-sm">
+        <div className="lg:sticky lg:top-6 lg:col-span-1 lg:self-start">
+          <nav className={`rounded-2xl border ${theme.border} bg-white p-2 shadow-sm dark:bg-slate-900`}>
             {sidebarLinks.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
@@ -92,11 +98,11 @@ export function DashboardLayout() {
                   to={item.path}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-semibold'
+                      ? `${theme.active} font-semibold`
                       : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-400'}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? theme.icon : 'text-slate-400'}`} />
                   {item.label}
                 </Link>
               );
@@ -107,6 +113,7 @@ export function DashboardLayout() {
         {/* Dashboard Content */}
         <div className="lg:col-span-3">
           <Outlet />
+          {location.pathname === '/dashboard' && <div className="mt-8"><div className={`mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] ${theme.accent}`}><span className="h-2 w-2 rounded-full bg-emerald-500" />{theme.eyebrow}</div><ConferenceTimetable compact themeKey={category} title="Complete ICOSST 2026 timetable" /></div>}
         </div>
       </div>
     </div>

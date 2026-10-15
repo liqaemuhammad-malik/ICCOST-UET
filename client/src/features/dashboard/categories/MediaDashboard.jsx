@@ -16,7 +16,7 @@ export function MediaDashboard({ user }) {
   return (
     <div className="space-y-6">
       {/* Category Hero Banner */}
-      <Card className="border-sky-300 dark:border-sky-800/60 bg-gradient-to-r from-sky-950 to-slate-900 text-white">
+      <Card className="hidden">
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>

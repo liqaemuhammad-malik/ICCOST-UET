@@ -18,7 +18,7 @@ export function PaperPresenterDashboard({ user }) {
   return (
     <div className="space-y-6">
       {/* Category Hero Banner */}
-      <Card className="border-emerald-300 dark:border-emerald-800/60 bg-gradient-to-r from-emerald-950 to-slate-900 text-white">
+      <Card className="hidden">
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
