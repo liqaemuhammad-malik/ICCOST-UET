@@ -13,7 +13,6 @@ import { ForgotPasswordView } from '@/features/auth/ForgotPasswordView';
 import { ResetPasswordView } from '@/features/auth/ResetPasswordView';
 import { VerifyCardView } from '@/features/public/VerifyCardView';
 import { DashboardOverviewView } from '@/features/dashboard/DashboardOverviewView';
-import { DigitalPassView } from '@/features/dashboard/DigitalPassView';
 import { ConferenceRegistrationView } from '@/features/dashboard/ConferenceRegistrationView';
 import { RegistrationStatusView } from '@/features/dashboard/RegistrationStatusView';
 import { PaymentSubmissionView } from '@/features/dashboard/PaymentSubmissionView';
@@ -97,7 +96,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'pass',
-        element: <DigitalPassView />,
+        element: <Navigate to="/dashboard" replace />,
       },
       {
         path: 'timetable',

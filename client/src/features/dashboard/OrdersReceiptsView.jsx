@@ -14,7 +14,7 @@ import {
   Building,
 } from 'lucide-react';
 
-export function OrdersReceiptsView() {
+export function OrdersReceiptsView({ embedded = false }) {
   const [loading, setLoading] = useState(true);
   const [registration, setRegistration] = useState(null);
   const [downloading, setDownloading] = useState(false);
@@ -67,9 +67,9 @@ export function OrdersReceiptsView() {
   const isApproved = registration?.registrationStatus === 'APPROVED';
 
   return (
-    <div className="space-y-6">
+    <div className={embedded ? 'space-y-4' : 'space-y-6'}>
       {/* Top Banner */}
-      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+      {!embedded && <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
@@ -83,7 +83,7 @@ export function OrdersReceiptsView() {
             </p>
           </div>
         </div>
-      </div>
+      </div>}
 
       {registration ? (
         <Card className="border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">

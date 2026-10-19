@@ -10,6 +10,8 @@ import { SpeakerDashboard } from './categories/SpeakerDashboard';
 import { PresentationDashboard } from './categories/PresentationDashboard';
 import { PaperPresenterDashboard } from './categories/PaperPresenterDashboard';
 import { AdminDashboard } from '@/admin/AdminDashboard';
+import { DigitalPassView } from './DigitalPassView';
+import { RegistrationCountdown } from '@/features/public/RegistrationCountdown';
 
 const CATEGORY_MAP = {
   ATTENDEE_PARTICIPANT: { label: 'Attendee / Participant', component: AttendeeDashboard },
@@ -32,7 +34,19 @@ export function DashboardOverviewView() {
 
   return (
     <div className="space-y-6">
-      {isAdmin ? <AdminDashboard /> : <ActiveComponent user={user} />}
+      {isAdmin ? <AdminDashboard /> : (
+        <>
+          <div className="grid items-stretch gap-6 xl:grid-cols-2">
+            <div className="h-[560px] min-h-0">
+              <DigitalPassView embedded />
+            </div>
+            <div className="h-[560px] min-h-0">
+              <RegistrationCountdown fillHeight />
+            </div>
+          </div>
+          <ActiveComponent user={user} />
+        </>
+      )}
     </div>
   );
 }

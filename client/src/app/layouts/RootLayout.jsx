@@ -17,6 +17,7 @@ import {
 export function RootLayout() {
   const { user, isAuthenticated, logout } = useAuthStore();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [profileOpen, setProfileOpen] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -90,6 +91,36 @@ export function RootLayout() {
                   </Button>
                 </Link>
 
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setProfileOpen((open) => !open)}
+                    aria-label="Open profile"
+                    aria-expanded={profileOpen}
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 text-emerald-800 transition hover:border-emerald-500 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"
+                  >
+                    <User className="h-4 w-4" />
+                  </button>
+                  {profileOpen && (
+                    <div className="absolute right-0 top-11 z-50 w-72 rounded-xl border border-slate-200 bg-white p-4 text-left shadow-xl dark:border-slate-700 dark:bg-slate-900">
+                      <div className="flex items-center gap-3 border-b border-slate-100 pb-3 dark:border-slate-800">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-sm font-bold text-white">
+                          {user.name?.split(' ').map((part) => part[0]).slice(0, 2).join('')}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{user.name}</p>
+                          <p className="truncate text-[11px] text-slate-500">{user.email}</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2 py-3 text-xs">
+                        <div><span className="text-slate-400">Role</span><p className="font-semibold capitalize text-slate-800 dark:text-slate-200">{user.role?.replaceAll('_', ' ')}</p></div>
+                        <div><span className="text-slate-400">Category</span><p className="font-semibold text-slate-800 dark:text-slate-200">{user.category || user.profile?.categoryCode || 'Attendee'}</p></div>
+                        <div><span className="text-slate-400">Institution</span><p className="truncate font-semibold text-slate-800 dark:text-slate-200">{user.profile?.institution || 'Not provided'}</p></div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 <Button variant="ghost" size="sm" onClick={handleLogout} title="Log Out" className="text-slate-500 transition hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-950/30">
                   <LogOut className="w-4 h-4" />
                 </Button>
@@ -138,6 +169,11 @@ export function RootLayout() {
             <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
               {isAuthenticated && user ? (
                 <>
+                  <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 dark:border-emerald-800 dark:bg-emerald-950/40">
+                    <p className="text-sm font-bold text-slate-900 dark:text-white">{user.name}</p>
+                    <p className="mt-0.5 truncate text-xs text-slate-500">{user.email}</p>
+                    <p className="mt-1 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">{user.profile?.institution || user.category || 'Participant'}</p>
+                  </div>
                   <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
                     <Button className="w-full bg-emerald-700 text-white">My Participant Portal</Button>
                   </Link>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -31,6 +31,7 @@ const loginSchema = z.object({
 export function LoginView({ adminOnly = false }) {
   const { login } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
   const [serverError, setServerError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -56,7 +57,7 @@ export function LoginView({ adminOnly = false }) {
       if (user.role === 'admin' || user.role === 'super_admin') {
         navigate('/admin');
       } else {
-        navigate('/dashboard');
+        navigate(location.state?.from || '/dashboard');
       }
     } catch (err) {
       setServerError(err.response?.data?.error?.message || 'Login failed. Please verify credentials.');

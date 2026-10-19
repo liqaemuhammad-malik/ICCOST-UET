@@ -328,10 +328,10 @@ export function RegistrationStatusView() {
               </Button>
               <Button
                 variant="outline"
-                onClick={() => navigate('/dashboard/pass')}
+                onClick={() => navigate('/dashboard')}
                 className="text-xs font-bold gap-1.5 border-emerald-600 text-emerald-800 hover:bg-emerald-100"
               >
-                <QrCode className="w-4 h-4" /> View Holding Card
+                <QrCode className="w-4 h-4" /> View Dashboard
               </Button>
             </div>
           </div>

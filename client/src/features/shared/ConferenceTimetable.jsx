@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { MapPin, Search, Sparkles, UserRound } from 'lucide-react';
+import { ArrowRight, CalendarCheck, MapPin, Search, Sparkles, UserRound } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/store/useAuthStore';
 import { Badge } from '@/components/ui/badge';
 import { getSettingsApi } from '@/api/settings';
 import { normalizeSchedule } from './scheduleData';
@@ -32,14 +34,31 @@ export function useConferenceSchedule() {
 export function ConferenceTimetable({ compact = false, title = 'Complete conference timetable', themeKey = 'ATTENDEE_PARTICIPANT' }) {
   const schedule = useConferenceSchedule();
   const theme = visualThemes[themeKey] || visualThemes.ATTENDEE_PARTICIPANT;
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
   const [query, setQuery] = useState('');
   const [day, setDay] = useState('All days');
+  const [selectedEvents, setSelectedEvents] = useState([]);
   const filtered = useMemo(() => schedule.filter((item) => {
     const matchesDay = day === 'All days' || item.day === day;
     const text = `${item.title} ${item.track} ${item.venue} ${item.speaker}`.toLowerCase();
     return matchesDay && text.includes(query.toLowerCase());
   }), [schedule, day, query]);
   const groups = ['Day 1', 'Day 2'].map((group) => ({ day: group, items: filtered.filter((item) => item.day === group) })).filter((group) => group.items.length);
+
+  const toggleEvent = (item) => {
+    setSelectedEvents((current) => current.includes(item.title)
+      ? current.filter((title) => title !== item.title)
+      : [...current, item.title]);
+  };
+
+  const registerForSelectedEvents = () => {
+    if (!selectedEvents.length) return;
+    const search = `?events=${encodeURIComponent(selectedEvents.join('|'))}`;
+    const destination = `/dashboard/registration${search}`;
+    if (isAuthenticated) navigate(destination);
+    else navigate('/login', { state: { from: { pathname: '/dashboard/registration', search } } });
+  };
 
   return <section className={compact ? 'mt-6' : 'container mx-auto max-w-7xl px-4 py-10'}>
     <div className="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_20px_70px_-35px_rgba(15,23,42,0.45)] dark:border-slate-700 dark:bg-slate-900">
@@ -54,7 +73,8 @@ export function ConferenceTimetable({ compact = false, title = 'Complete confere
         <div className="relative w-full sm:max-w-xs"><Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search event, track, venue..." className="h-9 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 text-xs outline-none ring-emerald-500 focus:ring-2 dark:border-slate-700 dark:bg-slate-900" /></div>
         <div className="flex rounded-lg border border-slate-200 bg-white p-1 text-xs dark:border-slate-700 dark:bg-slate-900">{['All days', 'Day 1', 'Day 2'].map((item) => <button key={item} type="button" onClick={() => setDay(item)} className={`rounded-md px-3 py-1.5 font-semibold transition ${day === item ? `${theme.active} text-white shadow-sm` : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>{item}</button>)}</div>
       </div>
-      <div className="space-y-7 p-4 sm:p-6">{groups.map((group) => <div key={group.day}><div className="mb-3 flex items-center gap-3"><div className={`flex h-9 w-9 items-center justify-center rounded-xl text-xs font-extrabold text-white shadow-sm ${theme.active}`}>{group.day.replace('Day ', 'D')}</div><div><p className="text-sm font-extrabold text-slate-900 dark:text-white">{group.day}</p><p className="text-[11px] text-slate-500">{group.items[0].date}</p></div><div className={`h-px flex-1 ${theme.line}`} /></div><div className="grid gap-3 lg:grid-cols-2">{group.items.map((item) => <article key={item.id || `${item.title}-${item.time}`} className={`rounded-2xl border border-slate-200 border-l-4 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-700 ${colorClasses[item.color] || colorClasses.blue}`}><div className="flex items-start justify-between gap-3"><div><Badge variant="outline" className="mb-2 bg-white/70 text-[10px] uppercase tracking-wide dark:bg-slate-900/60">{item.track}</Badge><h3 className="font-heading text-sm font-extrabold text-slate-900 dark:text-white">{item.title}</h3></div><span className="shrink-0 rounded-lg bg-white/80 px-2.5 py-1.5 text-[11px] font-bold text-slate-700 shadow-sm dark:bg-slate-900/60 dark:text-slate-200">{item.time}</span></div><div className="mt-3 grid gap-1.5 text-[11px] text-slate-600 dark:text-slate-300 sm:grid-cols-2"><span className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-emerald-600" />{item.venue}</span><span className="flex items-center gap-1.5"><UserRound className="h-3.5 w-3.5 text-emerald-600" />{item.speaker || 'All registered delegates'}</span></div></article>)}</div></div>)}{!groups.length && <div className="rounded-xl border border-dashed border-slate-300 p-10 text-center text-sm text-slate-500">No timetable events match your search.</div>}</div>
+      <div className="space-y-7 p-4 sm:p-6">{groups.map((group) => <div key={group.day}><div className="mb-3 flex items-center gap-3"><div className={`flex h-9 w-9 items-center justify-center rounded-xl text-xs font-extrabold text-white shadow-sm ${theme.active}`}>{group.day.replace('Day ', 'D')}</div><div><p className="text-sm font-extrabold text-slate-900 dark:text-white">{group.day}</p><p className="text-[11px] text-slate-500">{group.items[0].date}</p></div><div className={`h-px flex-1 ${theme.line}`} /></div><div className="grid gap-3 lg:grid-cols-2">{group.items.map((item) => { const selected = selectedEvents.includes(item.title); return <article key={item.id || `${item.title}-${item.time}`} className={`rounded-2xl border border-slate-200 border-l-4 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-700 ${colorClasses[item.color] || colorClasses.blue} ${selected ? 'ring-2 ring-emerald-500 ring-offset-2 dark:ring-offset-slate-900' : ''}`}><div className="flex items-start justify-between gap-3"><div><Badge variant="outline" className="mb-2 bg-white/70 text-[10px] uppercase tracking-wide dark:bg-slate-900/60">{item.track}</Badge><h3 className="font-heading text-sm font-extrabold text-slate-900 dark:text-white">{item.title}</h3></div><span className="shrink-0 rounded-lg bg-white/80 px-2.5 py-1.5 text-[11px] font-bold text-slate-700 shadow-sm dark:bg-slate-900/60 dark:text-slate-200">{item.time}</span></div><div className="mt-3 grid gap-1.5 text-[11px] text-slate-600 dark:text-slate-300 sm:grid-cols-2"><span className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-emerald-600" />{item.venue}</span><span className="flex items-center gap-1.5"><UserRound className="h-3.5 w-3.5 text-emerald-600" />{item.speaker || 'All registered delegates'}</span></div><button type="button" onClick={() => toggleEvent(item)} aria-pressed={selected} className={`mt-4 flex h-9 w-full items-center justify-center gap-2 rounded-lg px-3 text-xs font-bold text-white shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 ${selected ? 'bg-slate-700 hover:bg-slate-800' : 'bg-emerald-700 hover:bg-emerald-800'}`}><CalendarCheck className="h-3.5 w-3.5" />{selected ? 'Selected — remove' : 'Select this event'}<ArrowRight className="h-3.5 w-3.5" /></button></article>; })}</div></div>)}{!groups.length && <div className="rounded-xl border border-dashed border-slate-300 p-10 text-center text-sm text-slate-500">No timetable events match your search.</div>}</div>
+      <div className="border-t border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/60"><div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center"><div><p className="text-xs font-extrabold text-slate-900 dark:text-white">{selectedEvents.length ? `${selectedEvents.length} event${selectedEvents.length === 1 ? '' : 's'} selected` : 'Select one or more events to register'}</p>{selectedEvents.length > 0 && <p className="mt-1 line-clamp-2 text-[11px] text-slate-500">{selectedEvents.join(' · ')}</p>}</div><button type="button" disabled={!selectedEvents.length} onClick={registerForSelectedEvents} className="flex h-10 items-center justify-center gap-2 rounded-lg bg-emerald-700 px-4 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-50"><CalendarCheck className="h-4 w-4" />Continue with selected events<ArrowRight className="h-4 w-4" /></button></div></div>
     </div>
   </section>;
 }

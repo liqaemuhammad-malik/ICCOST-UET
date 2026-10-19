@@ -25,7 +25,7 @@ const CARD_THEMES = {
   PAPER_PRESENTER: { primary: '#065f46', secondary: '#059669', accent: '#6ee7b7' },
 };
 
-export function DigitalPassView() {
+export function DigitalPassView({ embedded = false }) {
   const { user, updateUser } = useAuthStore();
   const [registration, setRegistration] = useState(null);
   const [cardName, setCardName] = useState('');
@@ -100,8 +100,8 @@ export function DigitalPassView() {
   };
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 print:hidden">
+    <div className={embedded ? 'h-full space-y-2 overflow-hidden' : 'space-y-5'}>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 print:hidden">
         <div>
           <div className="flex items-center gap-2">
             <h2 className="text-xl font-bold font-heading">My Holding Card</h2>
@@ -138,16 +138,7 @@ export function DigitalPassView() {
         </div>
       </div>
 
-      {!isApproved && (
-        <div className="p-3.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2.5 print:hidden">
-          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-          <div>
-            <strong>Notice:</strong> Your conference registration is awaiting official finance verification and administrative approval. Your authoritative delegate ID and gate clearance token will become active once approved.
-          </div>
-        </div>
-      )}
-
-      <div className="max-w-2xl rounded-xl border border-slate-200 bg-white p-4 shadow-sm print:hidden">
+      <div className="max-w-2xl rounded-xl border border-slate-200 bg-white p-3 shadow-sm print:hidden">
         <label htmlFor="holding-card-name" className="mb-1.5 block text-xs font-bold text-slate-700">
           Name on Holding Card
         </label>
@@ -157,7 +148,7 @@ export function DigitalPassView() {
           value={cardName}
           onChange={(event) => setCardName(event.target.value)}
           maxLength={100}
-          className="h-10 w-full rounded-md border border-slate-300 px-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+          className="h-9 w-full rounded-md border border-slate-300 px-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
           placeholder="Enter Name"
         />
         <p className="mt-1.5 text-[11px] text-slate-500">
@@ -165,7 +156,7 @@ export function DigitalPassView() {
         </p>
         <label
           htmlFor="profile-photo"
-          className="mt-4 flex cursor-pointer items-center justify-center rounded-md border border-dashed border-emerald-300 px-3 py-2 text-xs font-bold text-emerald-800 hover:bg-emerald-50"
+          className="mt-3 flex cursor-pointer items-center justify-center rounded-md border border-dashed border-emerald-300 px-3 py-1.5 text-xs font-bold text-emerald-800 hover:bg-emerald-50"
         >
           {uploadingPhoto ? 'Uploading photo...' : profilePhotoUrl ? 'Change verification photo' : 'Upload verification photo'}
         </label>
@@ -180,19 +171,19 @@ export function DigitalPassView() {
       </div>
 
       <div
-        className="holding-card max-w-2xl overflow-hidden rounded-2xl border bg-white shadow-xl print:shadow-none"
+        className={`holding-card w-full ${embedded ? 'mx-auto max-w-xl' : 'max-w-2xl'} overflow-hidden rounded-2xl border bg-white shadow-xl print:shadow-none`}
         style={{ borderColor: theme.secondary }}
       >
-        <div className="border-b-4 border-amber-400 bg-white px-6 py-4">
+        <div className={`border-b-4 border-amber-400 bg-white ${embedded ? 'px-3 py-2' : 'px-6 py-4'}`}>
           <div className="flex items-center justify-between gap-4">
-            <img src="/uet-logo.png" alt="UET Lahore" className="h-16 w-16 object-contain" />
-            <img src="/icosst-logo.png" alt="20th IEEE ICOSST 2026" className="h-16 flex-1 object-contain" />
-            <img src="/kics-logo.png" alt="KICS UET Lahore" className="h-16 w-16 object-contain" />
+            <img src="/uet-logo.png" alt="UET Lahore" className={`${embedded ? 'h-9 w-9' : 'h-16 w-16'} object-contain`} />
+            <img src="/icosst-logo.png" alt="20th IEEE ICOSST 2026" className={`${embedded ? 'h-9' : 'h-16'} flex-1 object-contain`} />
+            <img src="/kics-logo.png" alt="KICS UET Lahore" className={`${embedded ? 'h-9 w-9' : 'h-16 w-16'} object-contain`} />
           </div>
         </div>
 
         <div
-          className="px-6 py-5 text-white"
+          className={`${embedded ? 'px-3 py-3' : 'px-6 py-5'} text-white`}
           style={{ background: `linear-gradient(115deg, ${theme.primary}, ${theme.secondary})` }}
         >
           <div className="flex items-center justify-between">
@@ -200,14 +191,14 @@ export function DigitalPassView() {
               <p className="text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: theme.accent }}>
                 Official Digital Credential
               </p>
-              <h1 className="mt-1 text-2xl font-bold tracking-tight">Conference Holding Card</h1>
+              <h1 className={`${embedded ? 'text-xl' : 'text-2xl'} mt-1 font-bold tracking-tight`}>Conference Holding Card</h1>
             </div>
-            <ShieldCheck className="h-10 w-10 text-amber-300" />
+            <ShieldCheck className={`${embedded ? 'h-7 w-7' : 'h-10 w-10'} text-amber-300`} />
           </div>
         </div>
 
-        <div className="flex flex-col gap-6 bg-gradient-to-br from-white to-emerald-50/50 p-6 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0 space-y-5">
+        <div className={`flex flex-col ${embedded ? 'gap-3 p-3' : 'gap-6 p-6'} bg-gradient-to-br from-white to-emerald-50/50 sm:flex-row sm:items-center sm:justify-between`}>
+          <div className={`min-w-0 ${embedded ? 'space-y-3' : 'space-y-5'}`}>
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-700">Card Holder</p>
               <div className="flex items-center gap-3">
@@ -215,15 +206,15 @@ export function DigitalPassView() {
                   <img
                     src={profilePhotoUrl}
                     alt="Profile"
-                    className="h-14 w-14 rounded-full border-2 border-emerald-700 object-cover"
+                    className={`${embedded ? 'h-11 w-11' : 'h-14 w-14'} rounded-full border-2 border-emerald-700 object-cover`}
                   />
                 ) : null}
-                <p className="mt-1 break-words text-2xl font-extrabold text-slate-900">
+                <p className={`${embedded ? 'text-xl' : 'text-2xl'} mt-1 break-words font-extrabold text-slate-900`}>
                   {printedName}
                 </p>
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Identification Number</p>
                 <p className="mt-1 break-all font-mono text-sm font-bold text-emerald-900">{cardId}</p>
@@ -245,8 +236,8 @@ export function DigitalPassView() {
           </div>
 
           <div className="flex shrink-0 flex-col items-center gap-2">
-            <div className="rounded-2xl border-2 border-emerald-900 bg-white p-3 shadow-md">
-              <QRCodeSVG value={qrValue} size={150} level="H" includeMargin />
+            <div className={`${embedded ? 'rounded-xl p-2' : 'rounded-2xl p-3'} border-2 border-emerald-900 bg-white shadow-md`}>
+              <QRCodeSVG value={qrValue} size={embedded ? 105 : 150} level="H" includeMargin />
             </div>
             <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-emerald-800">
               <QrCode className="h-3.5 w-3.5" /> Scan to identify

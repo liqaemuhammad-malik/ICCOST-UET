@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { getSettingsApi, updateSettingApi } from '@/api/settings';
 import { defaultSchedule, emptyScheduleItem, normalizeSchedule } from '@/features/shared/scheduleData';
 
-const fields = [['day', 'Day'], ['date', 'Date'], ['time', 'Time'], ['title', 'Event title'], ['track', 'Track / group'], ['venue', 'Venue'], ['speaker', 'Speaker / host']];
+const fields = [['day', 'Day'], ['date', 'Date'], ['time', 'Time slot'], ['title', 'Event title'], ['track', 'Track / group'], ['venue', 'Venue / room'], ['speaker', 'Speaker / host'], ['description', 'Event description'], ['color', 'Card color']];
 
 export function EventScheduleView() {
   const [sessions, setSessions] = useState(defaultSchedule);

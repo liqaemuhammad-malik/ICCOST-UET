@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { OrdersReceiptsView } from './OrdersReceiptsView';
 import {
   getMyRegistrationApi,
   getRegistrationConfigApi,
@@ -301,10 +302,10 @@ export function PaymentSubmissionView() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => navigate('/dashboard/pass')}
+                  onClick={() => navigate('/dashboard')}
                   className="text-xs gap-1.5"
                 >
-                  Holding Card <FileCheck className="w-3.5 h-3.5" />
+                  View Dashboard <FileCheck className="w-3.5 h-3.5" />
                 </Button>
               )}
             </div>
@@ -623,6 +624,9 @@ export function PaymentSubmissionView() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Invoice and receipt history is part of the payment workspace. */}
+      <OrdersReceiptsView embedded />
     </div>
   );
 }

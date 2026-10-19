@@ -9,7 +9,7 @@ export const createRegistrationSchema = z.object({
   ieeeMembershipNumber: z.string().trim().optional(),
   participantCategory: z.enum(['IEEE_MEMBER_STUDENT', 'NON_IEEE_PROFESSIONAL']),
   attendanceMode: z.enum(['PHYSICAL', 'VIRTUAL']).default('PHYSICAL'),
-  selectedActivities: z.array(z.string()).default([]),
+  selectedActivities: z.array(z.string()).min(1, 'Select at least one event').default([]),
   attendDinner: z.boolean().default(false),
 }).refine(
   (data) => {

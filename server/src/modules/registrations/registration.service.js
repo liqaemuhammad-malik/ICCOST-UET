@@ -116,47 +116,9 @@ export async function createOrUpdateRegistration(userId, registrationData, req =
   let existing = await ConferenceRegistration.findOne({ userId });
 
   if (existing) {
-    // If registration is already approved, prevent unapproved modifications
-    if (existing.registrationStatus === 'APPROVED') {
-      throw AppError.badRequest('Your registration is already APPROVED and cannot be modified directly.');
-    }
-
-    const previousStatus = existing.registrationStatus;
-    existing.fullName = fullName;
-    existing.email = email;
-    existing.phone = phone;
-    existing.organization = organization;
-    existing.isIeeeMember = isIeeeMember;
-    existing.ieeeMembershipNumber = isIeeeMember ? (ieeeMembershipNumber || '') : '';
-    existing.participantCategory = participantCategory;
-    existing.attendanceMode = attendanceMode;
-    existing.selectedActivities = selectedActivities;
-    existing.attendDinner = attendDinner;
-    existing.registrationFee = registrationFee;
-    existing.dinnerFee = dinnerFee;
-    existing.totalFee = totalFee;
-    existing.currency = currency;
-
-    // Reset status to pending payment if it was rejected
-    if (existing.registrationStatus === 'REJECTED') {
-      existing.registrationStatus = 'PENDING_PAYMENT';
-      existing.paymentStatus = 'NOT_SUBMITTED';
-    }
-
-    await existing.save();
-
-    await logAuditEvent({
-      actor: req?.user,
-      action: 'REGISTRATION_UPDATED',
-      targetEntity: 'ConferenceRegistration',
-      targetId: existing._id,
-      fromState: previousStatus,
-      toState: existing.registrationStatus,
-      reason: 'Participant updated conference registration details',
-      req,
-    });
-
-    return existing;
+    throw AppError.badRequest(
+      `You already have registration ${existing.registrationNumber}. Each student may submit only one conference registration.`
+    );
   }
 
   // Create new registration

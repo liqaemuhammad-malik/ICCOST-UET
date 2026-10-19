@@ -2,6 +2,9 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import * as authApi from '../api/auth';
 
+// Share the startup request when React Strict Mode invokes the effect twice.
+let authCheckPromise = null;
+
 export const useAuthStore = create(
   persist(
     (set, get) => ({
@@ -41,26 +44,26 @@ export const useAuthStore = create(
       },
 
       checkAuth: async () => {
-        try {
-          const res = await authApi.getMeApi();
-          const user = res.data;
-          set({ user, isAuthenticated: true });
-          return user;
-        } catch {
-          // Attempt silent refresh
+        if (authCheckPromise) return authCheckPromise;
+
+        authCheckPromise = (async () => {
           try {
-            const refreshRes = await authApi.refreshApi();
-            const token = refreshRes.data.accessToken;
-            window.__ACCESS_TOKEN__ = token;
-            const meRes = await authApi.getMeApi();
-            set({ user: meRes.data, accessToken: token, isAuthenticated: true });
-            return meRes.data;
+            // The Axios interceptor performs one refresh for a 401. Avoid a
+            // second refresh for 429s or any other failed request.
+            const res = await authApi.getMeApi();
+            const user = res.data;
+            set({ user, isAuthenticated: true });
+            return user;
           } catch {
             window.__ACCESS_TOKEN__ = null;
             set({ user: null, accessToken: null, isAuthenticated: false });
             return null;
           }
-        }
+        })().finally(() => {
+          authCheckPromise = null;
+        });
+
+        return authCheckPromise;
       },
 
       updateUser: (updatedUser) => {

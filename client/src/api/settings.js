@@ -1,8 +1,14 @@
 import { api } from './client';
 
+let settingsRequest = null;
+
 export async function getSettingsApi() {
-  const res = await api.get('/settings');
-  return res.data;
+  if (!settingsRequest) {
+    settingsRequest = api.get('/settings').then((res) => res.data).finally(() => {
+      settingsRequest = null;
+    });
+  }
+  return settingsRequest;
 }
 
 export async function updateSettingApi(key, value, description = '') {

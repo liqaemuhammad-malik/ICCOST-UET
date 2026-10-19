@@ -13,6 +13,7 @@ import {
   ClipboardList,
   Layers,
   ArrowLeft,
+  ShieldCheck,
 } from 'lucide-react';
 
 export function AdminLayout() {
@@ -48,6 +49,8 @@ export function AdminLayout() {
     { label: 'Staff & Audit Logs', path: '/admin/audit', icon: ShieldAlert },
     { label: 'System Settings', path: '/admin/settings', icon: Settings },
   ];
+  const PrivilegeIcon = user.role === 'super_admin' ? ShieldCheck : ShieldAlert;
+  const privilegeLabel = user.role === 'super_admin' ? 'Super administrator access' : 'Administrator access';
 
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-950">
@@ -66,8 +69,9 @@ export function AdminLayout() {
 
         <div className="flex items-center gap-3 text-xs">
           <span className="text-slate-300">{user.name}</span>
-          <Badge variant="outline" className="text-emerald-400 border-emerald-500 text-[10px] uppercase">
-            {user.role}
+          <Badge variant="outline" className="inline-flex items-center gap-1.5 border-emerald-500 text-[10px] uppercase text-emerald-400" title={privilegeLabel}>
+            <PrivilegeIcon className="h-3 w-3" aria-hidden="true" />
+            {user.role.replaceAll('_', ' ')}
           </Badge>
         </div>
       </header>

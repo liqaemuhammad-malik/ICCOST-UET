@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/useAuthStore';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,17 +26,14 @@ import {
   HelpCircle,
 } from 'lucide-react';
 
-const ACTIVITIES = [
-  'Paper Presentation Session',
-  'Invited Speakers Tutorials',
-  'Industrial Exposition',
-  'Student Competition / Career Fair',
-  'Opening / Closing Ceremony',
-];
-
 export function ConferenceRegistrationView() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const selectedEvents = query.get('events')
+    ? query.get('events').split('|').filter(Boolean)
+    : (query.get('event') ? [query.get('event')] : []);
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -59,7 +56,7 @@ export function ConferenceRegistrationView() {
     ieeeMembershipNumber: '',
     participantCategory: 'IEEE_MEMBER_STUDENT',
     attendanceMode: 'PHYSICAL',
-    selectedActivities: ['Opening / Closing Ceremony', 'Keynote Addresses'],
+    selectedActivities: selectedEvents,
     attendDinner: false,
   });
 
@@ -127,24 +124,13 @@ export function ConferenceRegistrationView() {
   const calculatedDinnerFee = formData.attendDinner ? feeConfig.dinnerFee : 0;
   const calculatedGrandTotal = calculatedRegFee + calculatedDinnerFee;
 
-  const handleActivityToggle = (act) => {
-    setFormData((prev) => {
-      const exists = prev.selectedActivities.includes(act);
-      return {
-        ...prev,
-        selectedActivities: exists
-          ? prev.selectedActivities.filter((a) => a !== act)
-          : [...prev.selectedActivities, act],
-      };
-    });
-  };
-
   const validate = () => {
     const errs = {};
     if (!formData.fullName.trim()) errs.fullName = 'Full Name is required';
     if (!formData.email.trim()) errs.email = 'Email Address is required';
     if (!formData.phone.trim()) errs.phone = 'Contact Phone Number is required';
     if (!formData.organization.trim()) errs.organization = 'University or Organization is required';
+    if (!formData.selectedActivities.length) errs.selectedActivities = 'Select at least one event to continue';
     if (formData.isIeeeMember && !formData.ieeeMembershipNumber.trim()) {
       errs.ieeeMembershipNumber = 'IEEE Membership Number is required when IEEE member is selected';
     }
@@ -254,7 +240,26 @@ export function ConferenceRegistrationView() {
         </div>
       )}
 
-      {/* Main Registration Form */}
+      {existingReg ? (
+        <Card className="border-emerald-200 bg-emerald-50/60 dark:border-emerald-800 dark:bg-emerald-950/20">
+          <CardContent className="p-6 text-center">
+            <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-600" />
+            <h3 className="mt-3 text-lg font-bold text-slate-900 dark:text-white">Registration Already Submitted</h3>
+            <p className="mx-auto mt-1 max-w-lg text-xs text-slate-600 dark:text-slate-300">
+              Registration <strong>{existingReg.registrationNumber}</strong> is already linked to your account. Each student may submit only one conference registration.
+            </p>
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
+              <Button type="button" onClick={() => navigate('/dashboard/status')} className="gap-1.5 bg-emerald-700 text-xs text-white hover:bg-emerald-800">
+                Track Registration <ArrowRight className="h-3.5 w-3.5" />
+              </Button>
+              <Button type="button" variant="outline" onClick={() => navigate('/dashboard/payment')} className="gap-1.5 text-xs">
+                Go to Payment <CreditCard className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+      /* Main Registration Form */
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column (2 Cols): Personal Details & Preferences */}
@@ -339,42 +344,24 @@ export function ConferenceRegistrationView() {
                   Step 2: Conference Activities
                 </CardTitle>
                 <CardDescription className="text-xs">
-                  Select all activities you intend to attend during 22–23 December 2026.
+                  Your event selection was made on the schedule page and is locked for this registration.
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {ACTIVITIES.map((act) => {
-                    const isChecked = formData.selectedActivities.includes(act);
-                    return (
-                      <button
-                        type="button"
-                        key={act}
-                        disabled={isApproved}
-                        onClick={() => handleActivityToggle(act)}
-                        className={`p-3 rounded-lg border text-left flex items-start gap-3 transition-colors ${
-                          isChecked
-                            ? 'border-emerald-500 bg-emerald-50/70 dark:bg-emerald-950/40 text-emerald-950 dark:text-emerald-200'
-                            : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'
-                        }`}
-                      >
-                        <div
-                          className={`mt-0.5 w-4 h-4 rounded flex items-center justify-center border transition-colors ${
-                            isChecked
-                              ? 'bg-emerald-600 border-emerald-600 text-white'
-                              : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900'
-                          }`}
-                        >
-                          {isChecked && <CheckCircle2 className="w-3.5 h-3.5" />}
-                        </div>
-                        <div>
-                          <span className="text-xs font-semibold block">{act}</span>
-                          <span className="text-[10px] text-slate-500">Official ICOSST Track</span>
-                        </div>
-                      </button>
-                    );
-                  })}
+                {selectedEvents.length > 0 && (
+                  <div className="mb-4 flex items-start gap-2 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                    <span><strong>{selectedEvents.length} event{selectedEvents.length === 1 ? '' : 's'}</strong> selected from the timetable and ready for registration.</span>
+                  </div>
+                )}
+                <div className="flex flex-wrap gap-2">
+                  {formData.selectedActivities.map((activity) => (
+                    <Badge key={activity} variant="secondary" className="px-3 py-2 text-xs">
+                      <CheckCircle2 className="mr-1.5 h-3.5 w-3.5 text-emerald-600" />{activity}
+                    </Badge>
+                  ))}
                 </div>
+                {errors.selectedActivities && <p className="mt-2 text-[11px] text-rose-600">{errors.selectedActivities}</p>}
               </CardContent>
             </Card>
 
@@ -691,6 +678,7 @@ export function ConferenceRegistrationView() {
           </div>
         </div>
       </form>
+      )}
     </div>
   );
 }
