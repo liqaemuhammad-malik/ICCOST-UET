@@ -37,13 +37,13 @@ export function RegistrationCountdown({ fillHeight = false }) {
   });
 
   return (
-    <div className={`relative mx-auto w-full max-w-xl overflow-hidden rounded-[2rem] border border-emerald-400/30 bg-[#071b1a] text-white shadow-[0_18px_50px_rgba(2,6,23,0.5)] ${fillHeight ? 'h-full' : 'mb-6'}`}>
+    <div className={`relative mx-auto w-full max-w-xl overflow-hidden rounded-[2rem] border border-emerald-400/30 bg-[#062938] text-white shadow-[0_18px_50px_rgba(2,6,23,0.5)] ${fillHeight ? 'h-full' : 'mb-6'}`}>
       <div className="absolute inset-y-0 left-0 w-1.5 bg-gradient-to-b from-amber-300 via-amber-500 to-emerald-400" />
       <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full border-[18px] border-emerald-400/10" />
       <div className={`relative h-full items-center ${fillHeight ? 'flex flex-col justify-center gap-10 px-7 py-8' : 'grid gap-5 px-5 py-5 sm:grid-cols-[1fr_auto] sm:px-7'}`}>
         <div className={fillHeight ? 'text-center' : 'text-left'}>
           <div className={`flex items-center gap-2 ${fillHeight ? 'justify-center' : ''}`}>
-            <span className={`flex items-center justify-center rounded-xl bg-amber-400 text-[#071b1a] shadow-lg shadow-amber-500/20 ${fillHeight ? 'h-11 w-11' : 'h-8 w-8'}`}><Clock3 className={fillHeight ? 'h-5 w-5' : 'h-4 w-4'} /></span>
+            <span className={`flex items-center justify-center rounded-xl bg-amber-400 text-[#062938] shadow-lg shadow-amber-500/20 ${fillHeight ? 'h-11 w-11' : 'h-8 w-8'}`}><Clock3 className={fillHeight ? 'h-5 w-5' : 'h-4 w-4'} /></span>
             <div><p className="text-[9px] font-black uppercase tracking-[0.25em] text-amber-300">ICOSST 2026</p><p className="text-sm font-extrabold tracking-tight">Registration is open</p></div>
           </div>
           <div className={`mt-4 h-px bg-gradient-to-r from-amber-300 to-transparent ${fillHeight ? 'mx-auto w-32' : 'w-24'}`} />

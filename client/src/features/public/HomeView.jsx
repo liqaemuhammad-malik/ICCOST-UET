@@ -1,224 +1,256 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { HeroSection } from '@/components/shared/HeroSection';
-import { StatTicker } from '@/components/shared/StatTicker';
-import { Marquee } from '@/components/magic/Marquee';
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import * as authApi from '@/api/auth';
 import {
-  Cpu,
-  ShieldCheck,
-  Code2,
-  Cloud,
-  Layers,
   ArrowRight,
-  Sparkles,
-  Calendar,
-  CheckCircle2,
-  FileCheck,
+  CalendarDays,
+  Camera,
+  Clock3,
+  Mail,
+  MapPin,
+  Mic2,
+  Navigation,
+  Users,
 } from 'lucide-react';
+import './icosstLanding.css';
+
+const topics = [
+  ['01', 'Computational Intelligence', 'Algorithms and methodologies in computational intelligence, machine learning and deep learning applications.'],
+  ['02', 'Artificial Intelligence', 'Artificial intelligence for smart cities and urban management, neural language processing and computer vision.'],
+  ['03', 'Cybersecurity', 'Threat detection, prevention, and response mechanisms, secure architecture for the Internet of Things and blockchain technology.'],
+  ['04', 'Smart Cities', 'Smart infrastructure systems and mobility, sustainable energy management, green economy and community development.'],
+  ['05', 'Cultural Heritage', 'Traditional values, archaeology, digital preservation, language and culture in the age of AI and technology.'],
+  ['06', 'Business Intelligence', 'AI and Machine Learning for business, space-based communication systems, and strategies for emerging technologies.'],
+];
+
+const committee = [
+  ['Prof. Dr. Shahid A. Raza', 'Patron in Chief', 'https://i.pravatar.cc/160?img=12'],
+  ['Prof. Dr. Shahzad Asif', 'General Chair', 'https://i.pravatar.cc/160?img=11'],
+  ['Dr. Yasir Saleem', 'General Co-Chair', 'https://i.pravatar.cc/160?img=13'],
+  ['Kashif Bashir', 'Executive Chair', 'https://i.pravatar.cc/160?img=14'],
+  ['Prof. Dr. Waqas Mahmood', 'Technical Program Committee', 'https://i.pravatar.cc/160?img=15'],
+  ['Prof. Dr. Usman Ghani', 'Technical Program Committee', 'https://i.pravatar.cc/160?img=16'],
+  ['Shahid Zulfiqar', 'Chair Publications Committee', 'https://i.pravatar.cc/160?img=17'],
+  ['Farran Riaz', 'Chair Exhibition & Sponsorship', 'https://i.pravatar.cc/160?img=18'],
+  ['Aqeel Baber', 'Chair Administration Committee', 'https://i.pravatar.cc/160?img=19'],
+  ['Muhammad Hassan', 'Chair Website Committee', 'https://i.pravatar.cc/160?img=20'],
+  ['Muhammad Ismael', 'Chair Finance Committee', 'https://i.pravatar.cc/160?img=21'],
+];
+
+function SectionTitle({ children }) {
+  return <h2 className="section-title">[ {children} ]</h2>;
+}
 
 export function HomeView() {
-  const [categories, setCategories] = useState([]);
-
-  useEffect(() => {
-    authApi
-      .getCategoriesApi()
-      .then((res) => setCategories(res.data || []))
-      .catch(() => {});
-  }, []);
-
-  const technicalTracks = [
-    {
-      icon: Cpu,
-      title: 'Artificial Intelligence & Machine Learning',
-      desc: 'Deep learning architectures, LLMs in open-source, computer vision, NLP, and intelligent agent systems.',
-    },
-    {
-      icon: ShieldCheck,
-      title: 'Cyber Security & Cryptography',
-      desc: 'Defensive engineering, zero-trust protocols, open security auditing, and cloud threat modeling.',
-    },
-    {
-      icon: Code2,
-      title: 'Software Engineering & Open Systems',
-      desc: 'Architectures for scale, modern devops, microservices, and sustainable open-source ecosystems.',
-    },
-    {
-      icon: Cloud,
-      title: 'Cloud, Distributed & Edge Computing',
-      desc: 'Kubernetes orchestration, serverless frameworks, edge IoT clusters, and resilient data grids.',
-    },
-  ];
-
-  const partners = [
-    'IEEE Lahore Section',
-    'UET Lahore',
-    'Al-Khawarizmi Institute of Computer Science (KICS)',
-    'Higher Education Commission (HEC)',
-    'Punjab Information Technology Board (PITB)',
-    'National Center for Cyber Security (NCCS)',
-    'National Center for Artificial Intelligence (NCAI)',
-  ];
-
   return (
-    <div>
-      {/* 1. Hero Section */}
-      <HeroSection />
+    <main className="icosst-page-root">
+      {/* Hero Section */}
+      <section id="home" className="hero">
+        <div className="hero-orbit orbit-one" />
+        <div className="hero-orbit orbit-two" />
+        <div className="hero-content">
+          <p className="eyebrow">International Conference on Open Source Systems &amp; Technologies</p>
+          <h1><small>20<sup>th</sup></small> ICOSST <span>2026</span></h1>
+          <strong>22–23 December 2026</strong>
+          <p className="hero-subtitle">
+            20th International Conference on Open<br className="desktop" /> Source Systems and Technologies
+          </p>
+          <em>(ICOSST 2026)</em>
 
-      {/* 2. Key Metrics & Stat Ticker */}
-      <StatTicker />
+          {/* Hero CTAs */}
+          <div className="hero-cta-group">
+            <Link to="/register" className="hero-cta-btn">
+              Register Now <ArrowRight size={18} />
+            </Link>
+            <a href="#submissions" className="hero-secondary-btn">
+              Call for Papers
+            </a>
+          </div>
+        </div>
 
-      {/* 3. Technical Tracks Section */}
-      <section className="py-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center mb-16">
-            <Badge variant="outline" className="text-emerald-700 dark:text-emerald-400 border-emerald-600/40 uppercase mb-3">
-              Research & Industry Scope
-            </Badge>
-            <h2 className="text-3xl font-extrabold font-heading text-slate-900 dark:text-white">
-              Core Technical Tracks & Sessions
-            </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
-              Peer-reviewed technical presentations, international keynote addresses, and high-impact industry research papers.
+        <div className="hero-bottom">
+          <span>Conference<br />Secretariat</span>
+          <p>
+            Al-Khawarizmi Institute of Computer Science (KICS),<br />
+            University of Engineering and Technology (UET), Lahore, Pakistan
+          </p>
+          <b>IEEE · ComSoc · COMSATS</b>
+        </div>
+      </section>
+
+      {/* Main Content Area */}
+      <div className="main-content-wrap">
+        <div className="container">
+          <div className="announcement">
+            ICOSST 2026 has Initiated &mdash;{' '}
+            <Link
+              to="/register"
+              style={{
+                color: '#fcb900',
+                textDecoration: 'underline',
+                fontWeight: 'bold',
+                marginLeft: '0.25rem',
+              }}
+            >
+              Register Here
+            </Link>
+          </div>
+
+          <div className="facts">
+            <div>
+              <MapPin />
+              <span>Location<small>UET Lahore</small></span>
+            </div>
+            <div>
+              <CalendarDays />
+              <span>Date &amp; Time<small>22–23 December 2026</small></span>
+            </div>
+            <div>
+              <Mic2 />
+              <span>Speakers<small>IBA</small></span>
+            </div>
+            <div>
+              <Users />
+              <span>Seats<small>150</small></span>
+            </div>
+          </div>
+
+          {/* Call for Paper Section */}
+          <section id="submissions" className="call-paper">
+            <SectionTitle>Call for Paper</SectionTitle>
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
+              <Link className="pill register-pill" to="/register">
+                Register for Conference <ArrowRight size={14} />
+              </Link>
+              <a className="pill" href="#topics">Call for Paper</a>
+            </div>
+
+            <div className="timeline">
+              {[
+                ['Paper Submission Deadline', 'October 15, 2026', <Mail key="m" />],
+                ['Acceptance/Non-Acceptance Notification', 'September 30, 2026', <ArrowRight key="a" />],
+                ['Camera ready Submission', 'November 10, 2026', <Camera key="c" />],
+              ].map(([title, date, icon]) => (
+                <div className="milestone" key={title}>
+                  <div className="milestone-icon">{icon}</div>
+                  <h3>{title}</h3>
+                  <small><CalendarDays />{date}</small>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Link className="pill register-pill" to="/register">
+                Attendee &amp; Author Registration
+              </Link>
+              <a className="pill" href="#contact">CMT Paper Submission</a>
+            </div>
+          </section>
+
+          {/* Scope of the Conference */}
+          <section id="about-us" className="copy-section">
+            <SectionTitle>Scope of the Conference</SectionTitle>
+            <p><b>19th International Conference on Open Source Systems and Technologies (ICOSST)</b></p>
+            <p>
+              ICOSST is an international conference on Open Source Systems and Technologies, offering a platform for the open-source community, researchers, and industry experts to exchange ideas, present innovative work and practices. ICOSST 2026 will help advance open-source technologies through cutting-edge research, novel applications, and industrial practices.
+            </p>
+          </section>
+
+          {/* Topics of Interest */}
+          <section id="topics" className="topics">
+            <SectionTitle>Topics of Interest</SectionTitle>
+            <p>
+              Authors are invited to submit papers in the conference by submitting articles that illustrate research results, project outputs, surveys, and industrial experiences that describe significant advancements in Computer Science, AI and Information Technology.
+            </p>
+            <div className="topic-grid">
+              {topics.map(([number, title, text]) => (
+                <article className="topic-card" key={number}>
+                  <span className="topic-num">{number}</span>
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* Steering Committee */}
+          <section id="committee" className="committee">
+            <div className="announcement">Steering Committee</div>
+            <div className="committee-grid">
+              {committee.map(([name, role, image]) => (
+                <article className="person" key={name}>
+                  <div className="person-line" />
+                  <img src={image} alt={`${name}, ${role}`} />
+                  <h3>{name}</h3>
+                  <p>{role}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* Sponsors */}
+          <section className="sponsors">
+            <SectionTitle>Our Sponsors</SectionTitle>
+            <div className="sponsor-row">
+              <span>IEEE<br /><b>COMPUTER SOCIETY</b></span>
+              <span className="crest">✺</span>
+              <span>⚙<br /><b>COMSATS</b></span>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      {/* Notice */}
+      <section className="notice">
+        <div>
+          <b>⚠ Important</b>
+          <p>
+            The ICOSST 2026 website was used for managing the past event registration. This notice provides general information for attendees and participants.
+          </p>
+        </div>
+      </section>
+
+      {/* Map */}
+      <div className="map">
+        <div className="map-pin">
+          <Navigation /> University of Engineering and Technology
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="footer-wrapper">
+        <footer id="contact">
+          <div>
+            <h2>ICOSST 2026</h2>
+            <p>
+              Conference Secretariat<br />
+              KICS, UET Lahore<br />
+              icosst@kics.edu.pk
             </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {technicalTracks.map((track, i) => {
-              const Icon = track.icon;
-              return (
-                <Card key={i} className="border-slate-200 dark:border-slate-800 hover:border-emerald-600/60 transition-all hover:shadow-md">
-                  <CardHeader className="p-6">
-                    <div className="w-12 h-12 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 flex items-center justify-center mb-4">
-                      <Icon className="w-6 h-6" />
-                    </div>
-                    <CardTitle className="text-lg font-bold font-heading text-slate-900 dark:text-white mb-2">
-                      {track.title}
-                    </CardTitle>
-                    <CardDescription className="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
-                      {track.desc}
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              );
-            })}
+          <div>
+            <h3>Quick Links</h3>
+            <a href="#submissions">Call for Paper</a>
+            <a href="#topics">Scope</a>
+            <Link to="/register">Register Portal</Link>
           </div>
-        </div>
-      </section>
-
-      {/* 4. Participant Categories Preview (Dynamic from DB) */}
-      <section className="py-20 bg-slate-50 dark:bg-slate-950/60 border-b border-slate-200 dark:border-slate-800">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <div>
-              <Badge variant="sample" className="mb-2">CONFIGURABLE ADMISSION MATRIX</Badge>
-              <h2 className="text-3xl font-extrabold font-heading text-slate-900 dark:text-white">
-                Participant Categories & Access Tiers
-              </h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-2xl">
-                Each category offers customized profile forms, tailored workshop permissions, and specific credential requirements.
-              </p>
-            </div>
-            <Link to="/register">
-              <Button className="bg-emerald-700 hover:bg-emerald-800 text-white gap-2">
-                Begin Registration <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
+          <div>
+            <h3>Useful Links</h3>
+            <a href="#committee">Committee</a>
+            <a href="#contact">Contact Us</a>
+            <Link to="/login">Sign In</Link>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categories.map((cat) => (
-              <div
-                key={cat.code}
-                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                      {cat.code}
-                    </span>
-                    {cat.requiresApproval && (
-                      <Badge variant="outline" className="text-[10px] text-amber-600 border-amber-400">
-                        Review Req.
-                      </Badge>
-                    )}
-                  </div>
-                  <h3 className="font-bold text-base font-heading text-slate-900 dark:text-white mb-2">
-                    {cat.name}
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-4">
-                    {cat.description}
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400">
-                  <span className="font-semibold block text-slate-700 dark:text-slate-300 mb-1">Allowed Activities:</span>
-                  <div className="flex flex-wrap gap-1">
-                    {cat.allowedActivityTypes?.slice(0, 3).map((act, idx) => (
-                      <span key={idx} className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-[10px]">
-                        {act.replace('_', ' ')}
-                      </span>
-                    ))}
-                    {(cat.allowedActivityTypes?.length || 0) > 3 && (
-                      <span className="text-[10px] text-slate-400">+{cat.allowedActivityTypes.length - 3} more</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div>
+            <h3>Contact Info</h3>
+            <p>
+              <Mail size={13} style={{ display: 'inline', marginRight: 4 }} /> info@kics.edu.pk<br />
+              <Clock3 size={13} style={{ display: 'inline', marginRight: 4 }} /> 042-99029227
+            </p>
           </div>
-        </div>
-      </section>
-
-      {/* 5. Sponsors & Partners Marquee */}
-      <section className="py-12 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 overflow-hidden">
-        <div className="container mx-auto px-4 mb-4 text-center">
-          <p className="text-xs uppercase font-bold text-slate-400 tracking-wider">
-            Academic Partners & Institutional Patrons
-          </p>
-        </div>
-
-        <Marquee className="py-4">
-          {partners.map((partner, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-3 px-6 py-2.5 mx-2 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm"
-            >
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-600"></div>
-              <span className="font-semibold text-xs text-slate-800 dark:text-slate-200 whitespace-nowrap">
-                {partner}
-              </span>
-            </div>
-          ))}
-        </Marquee>
-      </section>
-
-      {/* 6. Call to Action */}
-      <section className="py-16 bg-slate-900 text-white text-center">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <h2 className="text-3xl font-extrabold font-heading mb-4">
-            Join Us at UET Lahore for ICOSST 2026
-          </h2>
-          <p className="text-slate-300 text-sm leading-relaxed mb-8">
-            Register your conference pass, reserve limited hands-on workshop seats, or register your national competition team on the official digital platform.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link to="/register">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-8">
-                Create Attendee Account
-              </Button>
-            </Link>
-            <Link to="/login">
-              <Button size="lg" variant="outline" className="border-slate-700 text-slate-200 hover:bg-slate-800">
-                Sign In to Existing Account
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-    </div>
+          <small className="copyright">© Copyright ICOSST 2026. All rights reserved.</small>
+        </footer>
+      </div>
+    </main>
   );
 }
+
+export default HomeView;

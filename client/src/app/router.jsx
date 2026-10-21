@@ -31,7 +31,7 @@ export const router = createBrowserRouter([
     path: '/',
     element: <RootLayout />,
     children: [
-      { index: true, element: <RegisterView /> },
+      { index: true, element: <HomeView /> },
       { path: 'register', element: <RegisterView /> },
       { path: 'login', element: <LoginView /> },
       { path: 'admin-login', element: <LoginView adminOnly /> },

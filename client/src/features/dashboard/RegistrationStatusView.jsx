@@ -214,26 +214,24 @@ export function RegistrationStatusView() {
                 return (
                   <div
                     key={step.key}
-                    className={`flex flex-col items-center text-center p-3 rounded-xl border transition-all ${
-                      isCurrent
-                        ? isFailed
-                          ? 'border-rose-400 bg-rose-50/80 dark:bg-rose-950/40'
-                          : 'border-emerald-500 bg-emerald-50/80 dark:bg-emerald-950/40 ring-2 ring-emerald-500/20'
-                        : isPassed
+                    className={`flex flex-col items-center text-center p-3 rounded-xl border transition-all ${isCurrent
+                      ? isFailed
+                        ? 'border-rose-400 bg-rose-50/80 dark:bg-rose-950/40'
+                        : 'border-emerald-500 bg-emerald-50/80 dark:bg-emerald-950/40 ring-2 ring-emerald-500/20'
+                      : isPassed
                         ? 'border-slate-200 bg-white dark:bg-slate-800'
                         : 'border-slate-200 bg-slate-50/60 dark:bg-slate-900/40 opacity-75'
-                    }`}
+                      }`}
                   >
                     <div
-                      className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs mb-2 transition-colors ${
-                        isFailed
-                          ? 'bg-rose-600 text-white'
-                          : isPassed
+                      className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs mb-2 transition-colors ${isFailed
+                        ? 'bg-rose-600 text-white'
+                        : isPassed
                           ? 'bg-emerald-600 text-white'
                           : isCurrent
-                          ? 'bg-emerald-600 text-white animate-pulse'
-                          : 'bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300'
-                      }`}
+                            ? 'bg-emerald-600 text-white animate-pulse'
+                            : 'bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300'
+                        }`}
                     >
                       {isPassed ? (
                         <CheckCircle2 className="w-5 h-5" />
@@ -268,8 +266,8 @@ export function RegistrationStatusView() {
                   {isPayRejected
                     ? 'Payment Proof Rejected'
                     : isResubmission
-                    ? 'Payment Resubmission Requested'
-                    : 'Registration Application Rejected'}
+                      ? 'Payment Resubmission Requested'
+                      : 'Registration Application Rejected'}
                 </h4>
                 <p className="text-xs text-rose-700 dark:text-rose-300 mt-0.5">
                   <strong>Remarks:</strong>{' '}
@@ -308,10 +306,10 @@ export function RegistrationStatusView() {
                   Approved on:{' '}
                   {registration.approvedAt
                     ? new Date(registration.approvedAt).toLocaleDateString('en-GB', {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric',
-                      })
+                      day: '2-digit',
+                      month: 'short',
+                      year: 'numeric',
+                    })
                     : 'Verified'}
                 </span>
               </div>
@@ -409,11 +407,10 @@ export function RegistrationStatusView() {
                 <div>
                   <span className="text-slate-400 font-medium block">Conference Dinner</span>
                   <span
-                    className={`font-bold ${
-                      registration.attendDinner
-                        ? 'text-amber-600 dark:text-amber-400'
-                        : 'text-slate-400'
-                    }`}
+                    className={`font-bold ${registration.attendDinner
+                      ? 'text-amber-600 dark:text-amber-400'
+                      : 'text-slate-400'
+                      }`}
                   >
                     {registration.attendDinner ? 'Yes (Confirmed & Included)' : 'Not Included'}
                   </span>
