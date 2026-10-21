@@ -26,7 +26,28 @@ export function RootLayout() {
     navigate('/');
   };
 
-  const navLinks = [];
+  const navLinks = [
+    { label: 'Home', path: '/#home' },
+    { label: 'About Us', path: '/#about-us' },
+    { label: 'Submissions', path: '/#submissions' },
+    { label: 'Topics', path: '/#topics' },
+    { label: 'Committee', path: '/#committee' },
+    { label: 'Contact', path: '/#contact' },
+  ];
+
+  const handleNavClick = (e, targetPath) => {
+    if (targetPath.startsWith('/#')) {
+      const hash = targetPath.replace('/', '');
+      if (location.pathname === '/') {
+        e.preventDefault();
+        const el = document.querySelector(hash);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }
+    setMobileMenuOpen(false);
+  };
 
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden bg-background text-foreground">
@@ -62,11 +83,14 @@ export function RootLayout() {
           {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => {
-              const isActive = location.pathname === link.path;
+              const isActive =
+                location.pathname === '/' &&
+                (location.hash === link.path.replace('/', '') || (!location.hash && link.path === '/#home'));
               return (
-                <Link
+                <a
                   key={link.path}
-                  to={link.path}
+                  href={link.path}
+                  onClick={(e) => handleNavClick(e, link.path)}
                   className={`text-sm font-medium transition-colors hover:text-emerald-700 dark:hover:text-emerald-400 ${
                     isActive
                       ? 'text-emerald-800 dark:text-emerald-400 font-semibold border-b-2 border-emerald-700 pb-1'
@@ -74,7 +98,7 @@ export function RootLayout() {
                   }`}
                 >
                   {link.label}
-                </Link>
+                </a>
               );
             })}
           </nav>
@@ -85,7 +109,7 @@ export function RootLayout() {
               <div className="flex items-center gap-3">
                 {/* Participant Dashboard */}
                 <Link to="/dashboard">
-                    <Button size="sm" className="gap-1.5 bg-gradient-to-r from-emerald-700 to-emerald-600 font-semibold text-white shadow-[0_4px_12px_rgba(4,120,87,0.25)] transition hover:-translate-y-0.5 hover:from-emerald-800 hover:to-emerald-700">
+                  <Button size="sm" className="gap-1.5 bg-gradient-to-r from-emerald-700 to-emerald-600 font-semibold text-white shadow-[0_4px_12px_rgba(10,85,114,0.25)] transition hover:-translate-y-0.5 hover:from-emerald-800 hover:to-emerald-700">
                     <User className="w-4 h-4" />
                     Portal: {user.name.split(' ')[0]}
                   </Button>
@@ -127,13 +151,13 @@ export function RootLayout() {
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Link to="/login">
+                {/* <Link to="/login">
                   <Button variant="ghost" size="sm" className="font-semibold text-slate-700 transition hover:bg-emerald-50 hover:text-emerald-800 dark:text-slate-200 dark:hover:bg-emerald-950/30">
                     Sign In
                   </Button>
-                </Link>
+                </Link> */}
                 <Link to="/register">
-                  <Button size="sm" className="bg-gradient-to-r from-emerald-700 to-emerald-600 font-semibold text-white shadow-[0_4px_12px_rgba(4,120,87,0.25)] hover:from-emerald-800 hover:to-emerald-700">
+                  <Button size="sm" className="bg-gradient-to-r from-emerald-700 to-emerald-600 font-semibold text-white shadow-[0_4px_12px_rgba(10,85,114,0.25)] hover:from-emerald-800 hover:to-emerald-700">
                     Register Now
                   </Button>
                 </Link>
@@ -157,14 +181,14 @@ export function RootLayout() {
         {mobileMenuOpen && (
           <div className="space-y-3 border-t border-emerald-900/15 bg-white/95 px-4 py-4 shadow-lg dark:border-slate-800 dark:bg-slate-950/95 md:hidden">
             {navLinks.map((link) => (
-              <Link
+              <a
                 key={link.path}
-                to={link.path}
-                onClick={() => setMobileMenuOpen(false)}
+                href={link.path}
+                onClick={(e) => handleNavClick(e, link.path)}
                 className="block py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-emerald-600"
               >
                 {link.label}
-              </Link>
+              </a>
             ))}
             <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
               {isAuthenticated && user ? (
@@ -266,46 +290,48 @@ export function RootLayout() {
         </div>
       </footer>
 
-      <footer className="relative mt-auto overflow-hidden border-t border-emerald-500/30 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 py-4 text-slate-200 shadow-[0_-8px_30px_rgba(2,6,23,0.25)]">
-        <div className="footer-orb footer-orb-left" />
-        <div className="footer-orb footer-orb-right" />
-        <div className="container relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-4 px-4 md:grid-cols-3">
-          <div className="group flex items-center justify-center gap-3 md:justify-self-start">
-            <div className="rounded-xl border border-emerald-700/50 bg-white p-1.5 shadow-lg shadow-emerald-950/40 transition duration-500 group-hover:rotate-2 group-hover:scale-105">
-              <img src="/icosst-logo.png" alt="20th IEEE ICOSST 2026" className="h-14 w-auto object-contain" />
-            </div>
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.25em] text-emerald-300">ICOSST 2026</p>
-              <p className="mt-1 text-[11px] font-medium text-slate-300">Open Source Systems &amp; Technologies</p>
-              <p className="mt-1 max-w-xs text-[10px] leading-4 text-slate-400">
-                International conference hosted by UET Lahore and organized through KICS.
-              </p>
-            </div>
-          </div>
-
-          <div className="text-center text-[11px] leading-5 text-slate-300 md:border-x md:border-slate-700/80 md:px-8">
-            <p className="font-bold text-white">KICS &amp; UET Lahore</p>
-            <p className="text-[10px] text-slate-300">Al-Khawarizmi Institute of Computer Science</p>
-            <p className="text-[10px] text-slate-300">University of Engineering and Technology, Lahore</p>
-            <div>Email: <span className="font-semibold text-emerald-300">icosst@kics.edu.pk</span></div>
-            <div>Tel: <span className="font-semibold text-emerald-300">+92 (42) 99029450</span></div>
-          </div>
-
-          <div className="footer-partners justify-self-center md:justify-self-end">
-            <div className="flex items-center gap-3 rounded-xl border border-slate-700/80 bg-slate-900/80 px-3 py-2 shadow-lg transition duration-300 hover:-translate-y-0.5 hover:border-emerald-500">
-              <div className="flex items-center gap-2">
-                <a href="https://uet.edu.pk/home/" target="_blank" rel="noreferrer" aria-label="UET Lahore">
-                  <img src="/uet-logo.png" alt="UET Lahore" className="h-9 w-9 rounded-full bg-white object-contain p-0.5 transition duration-300 hover:scale-110" />
-                </a>
-                <a href="https://kics.edu.pk/" target="_blank" rel="noreferrer" aria-label="KICS UET Lahore">
-                  <img src="/kics-logo.png" alt="KICS UET Lahore" className="h-9 w-9 rounded-full bg-white object-contain p-0.5 transition duration-300 hover:scale-110" />
-                </a>
+      {location.pathname !== '/' && (
+        <footer className="relative mt-auto overflow-hidden border-t border-emerald-500/30 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 py-4 text-slate-200 shadow-[0_-8px_30px_rgba(2,6,23,0.25)]">
+          <div className="footer-orb footer-orb-left" />
+          <div className="footer-orb footer-orb-right" />
+          <div className="container relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-4 px-4 md:grid-cols-3">
+            <div className="group flex items-center justify-center gap-3 md:justify-self-start">
+              <div className="rounded-xl border border-emerald-700/50 bg-white p-1.5 shadow-lg shadow-emerald-950/40 transition duration-500 group-hover:rotate-2 group-hover:scale-105">
+                <img src="/icosst-logo.png" alt="20th IEEE ICOSST 2026" className="h-14 w-auto object-contain" />
               </div>
-              <span className="text-xs font-bold text-slate-100">UET &amp; KICS Partners</span>
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.25em] text-emerald-300">ICOSST 2026</p>
+                <p className="mt-1 text-[11px] font-medium text-slate-300">Open Source Systems &amp; Technologies</p>
+                <p className="mt-1 max-w-xs text-[10px] leading-4 text-slate-400">
+                  International conference hosted by UET Lahore and organized through KICS.
+                </p>
+              </div>
+            </div>
+
+            <div className="text-center text-[11px] leading-5 text-slate-300 md:border-x md:border-slate-700/80 md:px-8">
+              <p className="font-bold text-white">KICS &amp; UET Lahore</p>
+              <p className="text-[10px] text-slate-300">Al-Khawarizmi Institute of Computer Science</p>
+              <p className="text-[10px] text-slate-300">University of Engineering and Technology, Lahore</p>
+              <div>Email: <span className="font-semibold text-emerald-300">icosst@kics.edu.pk</span></div>
+              <div>Tel: <span className="font-semibold text-emerald-300">+92 (42) 99029450</span></div>
+            </div>
+
+            <div className="footer-partners justify-self-center md:justify-self-end">
+              <div className="flex items-center gap-3 rounded-xl border border-slate-700/80 bg-slate-900/80 px-3 py-2 shadow-lg transition duration-300 hover:-translate-y-0.5 hover:border-emerald-500">
+                <div className="flex items-center gap-2">
+                  <a href="https://uet.edu.pk/home/" target="_blank" rel="noreferrer" aria-label="UET Lahore">
+                    <img src="/uet-logo.png" alt="UET Lahore" className="h-9 w-9 rounded-full bg-white object-contain p-0.5 transition duration-300 hover:scale-110" />
+                  </a>
+                  <a href="https://kics.edu.pk/" target="_blank" rel="noreferrer" aria-label="KICS UET Lahore">
+                    <img src="/kics-logo.png" alt="KICS UET Lahore" className="h-9 w-9 rounded-full bg-white object-contain p-0.5 transition duration-300 hover:scale-110" />
+                  </a>
+                </div>
+                <span className="text-xs font-bold text-slate-100">UET &amp; KICS Partners</span>
+              </div>
             </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      )}
     </div>
   );
 }

@@ -33,7 +33,7 @@ export function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-slate-900 text-white pt-16 pb-20 border-b border-slate-800">
       {/* Background spotlight */}
-      <Spotlight className="-top-20 left-10 md:left-40" fill="rgba(16, 185, 129, 0.22)" />
+      <Spotlight className="-top-20 left-10 md:left-40" fill="rgba(10, 85, 114, 0.35)" />
 
       <div className="container relative z-10 mx-auto px-4">
         {/* Academic badges */}
